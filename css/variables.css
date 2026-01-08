@@ -1,0 +1,20 @@
+:root {
+  /* colors */
+  --color-bg: #191919;
+  --color-sidebar: #202020;
+  --color-text: #ffffff;
+  --color-text-sub: #9b9b9b;
+  --color-line: #505050;
+  --color-hover: #4f4f4f;
+  --color-button-hover: #6cecaa;
+
+  /* sizes */
+  --sidebar-width: 160px;
+  --bar-height: 24px;
+
+  /* spacing */
+  --padding-md: 12px;
+
+  /* radius */
+  --radius-sm: 4px;
+}

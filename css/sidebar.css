@@ -1,0 +1,58 @@
+/* 좌측 탭 고정 */
+.sidebar {
+  width: var(--sidebar-width);
+  border-right: 1px solid var(--color-line);
+  padding: 10px;
+
+  position: sticky;
+  top: 0;
+
+  overflow-y: auto;
+  background-color: var(--color-sidebar);
+  color: var(--color-text-sub);
+}
+
+.sidebar-logo {
+  padding: 4px 8px;
+  margin-bottom: 12px;
+  color: var(--color-text);
+}
+
+.sidebar-container {
+  margin-bottom: 12px;
+}
+
+.sidebar-header  {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 30px;
+  padding-left: 8px;
+  font-size: 12px;
+  color: #6f6f6f;
+}
+
+.sidebar-block {
+  min-height: 30px;
+  padding: 5px 8px;
+  box-sizing: border-box;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.sidebar-block:hover {
+  background-color: var(--color-hover);
+  border-radius: var(--radius-sm);
+}
+
+.button-sm {
+  height: 100%;
+  padding: 0 8px;
+  font-size: 12px;
+  align-content: center;
+  cursor: pointer;
+}
+
+.button-sm:hover {
+  color: var(--color-button-hover);
+}

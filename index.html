@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title id="title">(서비스 이름)</title>
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/sidebar.css" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+  <div class="body-container">
+    <!-- 좌측: 반 목록 -->
+    <aside class="sidebar">
+      <div id="sidebarLogo" class="sidebar-logo">(서비스 이름)</div>
+      <div class="sidebar-container">
+        <div class="sidebar-block">시간표</div>
+        <div class="sidebar-block">달력/Todo</div>
+        <div class="sidebar-block">다이어리</div>
+      </div>
+      <div class="sidebar-container">
+        <div class="sidebar-header">
+          <span>반 목록</span>
+          <div class="button-sm">추가</div>
+        </div>
+        <div id="groupList">
+          <div class="sidebar-block">GROUP1</div>
+          <div class="sidebar-block">GROUP2</div>
+          <div class="sidebar-block">GROUP3</div>
+        </div>
+      </div>
+      <div class="sidebar-container">
+        <div class="sidebar-header">데이터베이스</div>
+        <div class="sidebar-block" onclick="openTab('db')">DB 전체 보기</div>
+        <div class="sidebar-block" onclick="backupDB()">DB 저장하기</div>
+        <div class="sidebar-block" onclick="restoreDB()">DB 불러오기</div>
+        <div class="sidebar-block" onclick="createNewDB()">DB 초기화</div>
+        <input type="file" id="restoreFile" style="display:none" />
+      </div>
+    </aside>
+
+    <!-- 우측 -->
+    <main class="main">
+      <!-- 최상단 바 -->
+      <div class="globalbar">
+        <div>선택된 반</div>
+      </div>
+      <!-- 두번째 바 -->
+      <div class="localbar">
+        <div class="localbar-tab" onclick="openTab('info')">반 정보</div>
+        <div class="localbar-tab" onclick="openTab('students')">학생</div>
+        <div class="localbar-tab" onclick="openTab('plans')">수업 계획</div>
+        <div class="localbar-tab" onclick="openTab('scores')">과제/성적</div>
+        <div class="localbar-tab" onclick="openTab('messages')">문자</div>
+        <div class="localbar-tab" onclick="openTab('consults')">상담</div>
+      </div>
+
+      <section id="tabContent" class="tabContent"></section>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+  <script src="js/strings.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
