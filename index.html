@@ -15,9 +15,9 @@
       <div id="sidebarLogo" class="sidebar-logo">함수쌤클라쓰</div>
       <div class="sidebar-container">
         <div class="sidebar-list">
-          <div class="sidebar-block">시간표</div>
-          <div class="sidebar-block">달력/Todo</div>
-          <div class="sidebar-block">다이어리</div>
+          <div class="sidebar-block" onclick="openMenu('timetable')">시간표</div>
+          <div class="sidebar-block" onclick="openMenu('calender')">달력/todo</div>
+          <div class="sidebar-block" onclick="openMenu('diary')">다이어리</div>
         </div>
       </div>
       <div class="sidebar-container">
@@ -32,7 +32,7 @@
       <div class="sidebar-container">
         <div class="sidebar-header">데이터베이스</div>
         <div class="sidebar-list">
-          <div class="sidebar-block" onclick="openTab('db')">DB 전체 보기</div>
+          <div class="sidebar-block" onclick="openMenu('db')">DB 전체 보기</div>
           <div class="sidebar-block" onclick="DB.backupDB()">DB 저장하기</div>
           <div class="sidebar-block" onclick="DB.restoreDB()">DB 불러오기</div>
           <div class="sidebar-block" onclick="createNewDB()">DB 초기화</div>

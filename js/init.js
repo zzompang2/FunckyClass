@@ -10,6 +10,12 @@
 /********************/
 
 const DB_STORAGE_KEY = "funckyClassDB";
+const MENU_CONFIG = Object.freeze({
+  timetable:  { label: "시간표" },
+  calender:   { label: "달력/todo" },
+  diary:      { label: "다이어리" },
+  db:         { label: "데이터베이스" },
+});
 const TAB_CONFIG = Object.freeze({
   info:     { label: "정보" },
   students: { label: "학생" },
@@ -21,7 +27,7 @@ const TAB_CONFIG = Object.freeze({
 
 let SQL = null;
 let currentGroupId = 0;
-let currentSubTab = "info";
+let currentTab = "info";
 
 
 /*******************/
