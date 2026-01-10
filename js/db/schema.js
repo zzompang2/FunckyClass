@@ -1,5 +1,5 @@
 window.Schema = (function () {
-  const DB_COLUMNS = {
+  const DB_COLUMNS = Object.freeze({
     groups: {
       name:         "TEXT DEFAULT ''",
       subject:      "TEXT DEFAULT ''",
@@ -10,7 +10,7 @@ window.Schema = (function () {
     history: {
       table_name: "TEXT",
       row_id:     "INTEGER",
-      field:      "TEXT /* name / subject / teacher / sub_teacher / sub_subject */",
+      field:      "TEXT",
       old_value:  "TEXT",
       new_value:  "TEXT",
       changed_at: "TEXT",
@@ -51,7 +51,7 @@ window.Schema = (function () {
       student_id: "INTEGER",
       content:    "TEXT",
     },
-  }
+  });
 
   /**
    * DB_COLUMNS에 적힌 스키마를 바탕으로
@@ -60,6 +60,9 @@ window.Schema = (function () {
    */
   function initDB(db) {
     console.log("Schema.initDB");
+
+    // debugRecreateTables(db);
+
     db.run(createSqlFromColumns("groups"));
     db.run(createSqlFromColumns("group_schedules"));
     db.run(createSqlFromColumns("students"));
@@ -67,6 +70,17 @@ window.Schema = (function () {
     db.run(createSqlFromColumns("scores"));
     db.run(createSqlFromColumns("consults"));
     db.run(createSqlFromColumns("history"));
+  }
+
+  // 이전 버전의 DB를 가져올 때 db 수정을 해야 함
+  function debugRecreateTables(db) {
+    console.log("debugRecreateTables: 이전 버전의 데이터이므로 DB 전반적으로 수정합니다.");
+    deleteTable(db, "messages");
+    changeTableName(db, "group_history", "history");
+    changeColumnName(db, "history", "group_id", "row_id");
+    addColumn(db, "history", "table_name", "TEXT", "group");
+    recreateTable(db, "history");
+    recreateTable(db, "group_schedules");
   }
 
   /**
@@ -115,7 +129,7 @@ window.Schema = (function () {
       SELECT id, ${columnsStr}
       FROM ${tableName};
     `);
-    db.run(`DROP TABLE ${tableName}`);
+    deleteTable(db, tableName);
     changeTableName(db, `${tableName}_new`, tableName);
   }
 
@@ -166,7 +180,16 @@ window.Schema = (function () {
     `);
   }
 
+  /**
+   * 테이블을 삭제한다.
+   * @param {string} tableName 
+   */
+  function deleteTable(db, tableName) {
+    db.run(`DROP TABLE ${tableName}`);
+  }
+
   return {
-    initDB
+    DB_COLUMNS,
+    initDB,
   };
 })();

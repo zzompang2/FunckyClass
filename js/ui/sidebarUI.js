@@ -41,10 +41,7 @@ window.sidebarUI = (function () {
   function loadLocalbar() {
     const localbar = document.getElementById("localbar");
 
-    console.log(TAB_CONFIG);
-
     Object.entries(TAB_CONFIG).forEach(([key, value]) => {
-      console.log(key, value);
       const tabElem = document.createElement("div");
       tabElem.className = "localbar-tab";
       tabElem.addEventListener('click', () => openTab(key));

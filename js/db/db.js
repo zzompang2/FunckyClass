@@ -136,6 +136,25 @@ window.DB = (function () {
   }
 
   /**
+   * groupId에 해당하는 그룹의 데이터와 스케줄 데이터
+   * @param {number} groupId 
+   * @returns {[Group, Schedule[]]} {id, name, ...}
+   */
+  function getGroupById(groupId) {
+    const groupRes = db.exec(`
+      SELECT * FROM groups WHERE id=?
+    `, [groupId]);
+
+    const schedulesRes = db.exec(`
+      SELECT * FROM group_schedules WHERE group_id=?
+    `, [groupId]);
+    return [
+      resultToObjects(groupRes[0])[0],
+      resultToObjects(schedulesRes[0])
+    ];
+  }
+
+  /**
    * 모든 그룹 스케줄 데이터
    * @returns {Schedule[]} [ {id, group_id, day, start_time, end_time} ]
    */
@@ -149,8 +168,10 @@ window.DB = (function () {
   }
 
   function getStudentsByGroup(groupId) {
-    const res = db.exec(
-      "SELECT * FROM students WHERE group_id = ?",
+    const res = db.exec(`
+      SELECT * FROM students
+      WHERE group_id = ?
+      ORDER BY name`,
       [groupId]
     );
     return resultToObjects(res[0]);
@@ -188,6 +209,34 @@ window.DB = (function () {
     );
   }
 
+  /**
+   * groupId의 모든 변경사항 데이터 (날짜순)
+   * @param {number} groupId 
+   * @returns {[Object]} 
+   */
+  function getHistoryByGroup(groupId) {
+    const res = db.exec(`
+      SELECT *
+      FROM history
+      WHERE table_name='group'
+      AND row_id=?
+      ORDER BY changed_at ASC
+    `, [groupId]);
+    return resultToObjects(res[0]);
+  }
+
+  /**
+   * 
+   * @param {number} groupId 
+   * @param {string} name 
+   */
+  function addStudent(groupId) {
+    db.run(
+      "INSERT INTO students (group_id) VALUES (?)",
+      [groupId]
+    );
+  }
+
   return {
     // DB
     saveDB,
@@ -196,6 +245,11 @@ window.DB = (function () {
     backupDB,
     restoreDB,
     // GET
+    getGroupById,
     getGroupsWithSchedules,
+    getHistoryByGroup,
+    getStudentsByGroup,
+    // ADD
+    addStudent,
   };
 })();

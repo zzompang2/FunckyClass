@@ -50,10 +50,6 @@ function openTab(tab = currentTab) {
     return;
   }
 
-  if (tab === "students") {
-    return;
-  }
-
   if (tab === "plans") {
     return;
   }

@@ -1,0 +1,83 @@
+.table-container {
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.table-wrapper {
+  /* 표 열고 닫는 애니메이션 */
+  overflow: hidden;
+  transition: height 0.3s ease;
+}
+
+table {
+  height: auto;
+  border-radius: 10px;
+  border-spacing: 0;
+  border: 2px solid var(--color-line);
+  overflow: hidden; /* 모서리 부분 다듬기 */
+}
+
+table * {
+  /* 드래그 허용 */
+  -webkit-user-select: text;  /* 크롬, 사파리 */
+  -moz-user-select: unset;    /* 파이어폭스 */
+  -ms-user-select: unset;     /* IE, 엣지 */
+  user-select: text;          /* 표준 속성 */
+}
+
+table.full-size {
+  width: 100%;
+}
+
+table.fit-size {
+  width: auto;
+  min-width: 350px;
+}
+
+.toggle-button {
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  padding-top: 2px;
+  box-sizing: border-box;
+
+  rotate: 0deg;
+  transition: rotate 0.3s ease;
+}
+
+.toggle-button.closed {
+  rotate: -90deg;
+}
+
+.table-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+
+  font-size: var(--fontsize-md);
+  font-weight: bold;
+}
+
+tr:hover {
+  background-color: var(--color-container-800);
+}
+
+th {
+  padding: 6px 10px;
+  border: 1px solid var(--color-line);
+  background-color: var(--color-container-700);
+}
+
+td {
+  padding: 6px 10px;
+  /* border: 1px solid var(--color-line); */
+  white-space: break-spaces;
+  box-shadow: 0 0 0 1px var(--color-line);
+}
+
+td.empty {
+  font-style: oblique;
+  text-align: center;
+  color: var(--color-text-light-3);
+}

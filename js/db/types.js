@@ -11,7 +11,7 @@
 
 /**
  * 변경 이력 레코드
- * @typedef {Object} History
+ * @typedef {Object} HistoryType
  * @property {number} id
  * @property {string} table_name   // 변경된 테이블명
  * @property {number} row_id       // 변경된 row id
