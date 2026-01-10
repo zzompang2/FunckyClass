@@ -8,7 +8,6 @@ window.sidebarUI = (function () {
 
     groupsWithSchedules.forEach(row => {
       const [group, schedules, number] = row;
-      console.log(group, schedules);
 
       const groupBlock = document.createElement("div");
       groupBlock.className = "sidebar-block";
@@ -36,8 +35,27 @@ window.sidebarUI = (function () {
     });
   }
 
+  /**
+   * TAB_CONFIG를 참고하여 localbar에 탭들을 추가
+   */
+  function loadLocalbar() {
+    const localbar = document.getElementById("localbar");
+
+    console.log(TAB_CONFIG);
+
+    Object.entries(TAB_CONFIG).forEach(([key, value]) => {
+      console.log(key, value);
+      const tabElem = document.createElement("div");
+      tabElem.className = "localbar-tab";
+      tabElem.addEventListener('click', () => openTab(key));
+      tabElem.innerText = value.label;
+      localbar.appendChild(tabElem);
+    });
+  }
+
   return {
-    loadGroups
+    loadGroups,
+    loadLocalbar,
   };
 
 })();

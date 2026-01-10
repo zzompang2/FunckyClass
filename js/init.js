@@ -1,13 +1,37 @@
-/* GLOBAL 변수 */
+/**
+ * init.js
+ * 
+ * 광역으로 쓰이는 변수 및 함수들.
+ * 프로그램 실행시 최초로 UI를 구성하는 함수들.
+ */
+
+/********************/
+/* GLOBAL VARIABLES */
+/********************/
+
 const DB_STORAGE_KEY = "funckyClassDB";
+const TAB_CONFIG = Object.freeze({
+  info:     { label: "정보" },
+  students: { label: "학생" },
+  plans:    { label: "계획" },
+  scores:   { label: "과제/성적" },
+  message:  { label: "문자" },
+  consult:  { label: "상담" },
+});
+
 let SQL = null;
 let currentGroupId = 0;
-let currentTabName = '';
+let currentSubTab = "info";
 
-/* GLOBAL 함수 */
+
+/*******************/
+/* GLOBAL FUNCTION */
+/*******************/
+
 function dayToText(day) {
   return "일월화수목금토"[day];
 }
+
 
 /*************/
 /* APP START */
@@ -32,4 +56,5 @@ async function startApp() {
   }
 
   sidebarUI.loadGroups();
+  sidebarUI.loadLocalbar();
 }
