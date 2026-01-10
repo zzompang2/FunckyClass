@@ -23,6 +23,9 @@ const TAB_CONFIG = Object.freeze({
   message:  { label: "문자" },
   consult:  { label: "상담" },
 });
+const displayFunction = {
+  year: formatGradeFromYear,
+};
 
 let SQL = null;
 let currentGroupId = 0;
@@ -35,6 +38,26 @@ let currentTab = "info";
 
 function dayToText(day) {
   return "일월화수목금토"[day];
+}
+
+/**
+ * 태어난 년도를 학년으로 변경한다.
+ * @param {number} year 
+ * @returns {string} 학년
+ */
+function formatGradeFromYear(year) {
+  const nowYear = new Date().getFullYear();
+  const age = nowYear - year + 1;
+
+  console.log(year, nowYear, age);
+  if (8 <= age && age < 14)
+    return `초${age - 7} (${age})`;
+  else if (14 <= age && age < 17)
+    return `중${age - 13} (${age})`;
+  else if (17 <= age && age <20)
+    return `고${age - 16} (${age})`;
+  else
+    return `${age}세`;
 }
 
 /**
@@ -88,7 +111,10 @@ function objectListToTable(list, options = {}) {
     list.forEach(row => {
       html += "<tr>";
       columns.forEach(col => {
-        html += `<td>${row[col] ?? "-"}</td>`;
+        if (displayFunction[col])
+          html += `<td>${displayFunction[col](row[col])}</td>`;
+        else
+          html += `<td>${row[col] ?? "-"}</td>`;
       });
       html += "</tr>";
     });
