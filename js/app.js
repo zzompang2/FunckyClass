@@ -40,8 +40,13 @@ function openTab(tab = currentTab) {
   const area = document.getElementById("tabContent");
   currentTab = tab;
 
+  // global bar에 탭 이름 추가
+  document.getElementById("selected-tab").innerText = 
+    `/ ${TAB_CONFIG[currentTab].label}`;
+
+  // render view
   if (tab === "info") {
-    groupUI.renderGroupInfoTab();
+    groupUI.renderGroupInfoTab(area);
     return;
   }
 
