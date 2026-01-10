@@ -1,3 +1,7 @@
+html {
+  scrollbar-color: var(--color-container-700) var(--color-container-900);
+}
+
 /* 텍스트 호버될 때 [text 커서]로 변경되는 것 없애기 */
 div {
   cursor: default;
@@ -55,4 +59,8 @@ body {
 .localbar-tab:hover {
   background-color: var(--color-hover);
   border-radius: var(--radius-sm);
+}
+
+.scroll-wrap {
+  overflow-y: auto;
 }
