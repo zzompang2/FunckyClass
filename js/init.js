@@ -38,7 +38,7 @@ function dayToText(day) {
 }
 
 /**
- * 객체 배열을 HTML table 문자열로 변환.
+ * 객체 배열을 table로 변환.
  * 객체의 keys가 컬럼이 된다.
  * @param {string} title
  * @param {Object[]} list
@@ -76,7 +76,7 @@ function objectListToTable(list, options = {}) {
   const columns = options.columns || Object.keys(list[0]);
   let html = "<thead><tr>";
   columns.forEach(col => {
-    html += `<th>${col}</th>`;
+    html += `<th>${STRINGS.columns[col]}</th>`;
   });
   html += "</tr></thead>";
 
