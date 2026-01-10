@@ -2,6 +2,10 @@ window.DB = (function () {
   
   let db = null;
 
+  /**********/
+  /* DB 관련 */
+  /**********/
+
   /**
    * 현재 DB를 localStorage에 저장한다.
    */
@@ -92,11 +96,106 @@ window.DB = (function () {
     fileInput.click();
   }
 
+  /***********/
+  /* 공통 함수 */
+  /***********/
+
+  /**
+   * SQL 쿼리의 결과값을 object의 배열로 변환.
+   * key: column명
+   * value: 해당 column의 결과값
+   * @param {*} result { columns: [...], values: [...] }
+   * @returns [ {col: val, ...}, {...}, {...} ]
+   */
+  function resultToObjects(result) {
+    if (!result || !result.columns || !result.values) return [];
+
+    return result.values.map(row => {
+      const obj = {};
+      result.columns.forEach((col, i) => {
+        obj[col] = row[i];
+      });
+      return obj;
+    });
+  }
+
+  /***********/
+  /* GET 관련 */
+  /***********/
+
+  /**
+   * groups 테이블의 모든 데이터
+   * @returns {Group[]} [ {id, name, subject, ...} ]
+   */
+  function getAllGroups() {
+    const res = db.exec(`
+      SELECT * FROM groups
+      ORDER BY name
+    `);
+    return resultToObjects(res[0]);
+  }
+
+  /**
+   * 모든 그룹 스케줄 데이터
+   * @returns {Schedule[]} [ {id, group_id, day, start_time, end_time} ]
+   */
+  function getAllSchedules() {
+    const res = db.exec(`
+    SELECT *
+    FROM group_schedules
+    ORDER BY group_id, day;
+    `);
+    return resultToObjects(res[0]);
+  }
+
+  function getStudentsByGroup(groupId) {
+    const res = db.exec(
+      "SELECT * FROM students WHERE group_id = ?",
+      [groupId]
+    );
+    return resultToObjects(res[0]);
+  }
+
+  /**
+   * 그룹의 정보 / 스케줄 / 학생 인원 수
+   * @returns {[[Group, Schedule[], number]]}
+   */
+  function getGroupsWithSchedules() {
+    const groups = getAllGroups();
+    const schedules = getAllSchedules();
+
+    if (!groups) return [];
+
+    // scheduleMap[group_id]에 해당 그룹의 스케줄 array 만들기
+    // scheduleMap[1] = [ {day, start_time, end_time}, {...}, {...} ]
+    const scheduleMap = [];
+
+    if (schedules) {
+      schedules.forEach(sc => {
+        if (!scheduleMap[sc.group_id]) {
+          scheduleMap[sc.group_id] = [];
+        }
+        scheduleMap[sc.group_id].push(sc);
+      });
+    }
+
+    return groups.map(group => 
+      [
+        group,
+        scheduleMap[group.id] || [],
+        getStudentsByGroup(group.id).length
+      ]
+    );
+  }
+
   return {
+    // DB
     saveDB,
     loadDB,
     createNewDB,
     backupDB,
     restoreDB,
+    // GET
+    getGroupsWithSchedules,
   };
 })();

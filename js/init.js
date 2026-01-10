@@ -1,6 +1,17 @@
 /* GLOBAL 변수 */
 const DB_STORAGE_KEY = "funckyClassDB";
 let SQL = null;
+let currentGroupId = 0;
+let currentTabName = '';
+
+/* GLOBAL 함수 */
+function dayToText(day) {
+  return "일월화수목금토"[day];
+}
+
+/*************/
+/* APP START */
+/*************/
 
 /* sql.js 초기화 */
 initSqlJs({
@@ -19,4 +30,6 @@ async function startApp() {
   if (!loaded) {
     await DB.createNewDB();
   }
+
+  sidebarUI.loadGroups();
 }

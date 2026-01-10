@@ -5,12 +5,15 @@
   --color-text: #ffffff;
   --color-text-sub: #9b9b9b;
   --color-line: #505050;
-  --color-hover: #4f4f4f;
+  --color-hover: #252525;
   --color-button-hover: #6cecaa;
+  --color-selected: #6cecaa;
 
   /* sizes */
   --sidebar-width: 160px;
   --bar-height: 24px;
+  --fontsize-sm: 12px;
+  --fontsize-md: 16px;
 
   /* spacing */
   --padding-md: 12px;

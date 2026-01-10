@@ -22,33 +22,79 @@
   margin-bottom: 12px;
 }
 
+.sidebar-list > div:last-child {
+  border-bottom: none;
+}
+
 .sidebar-header  {
   display: flex;
   align-items: center;
   justify-content: space-between;
   height: 30px;
   padding-left: 8px;
-  font-size: 12px;
+  font-size: var(--fontsize-sm);
   color: #6f6f6f;
 }
 
 .sidebar-block {
-  min-height: 30px;
-  padding: 5px 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
   box-sizing: border-box;
-  font-size: 14px;
+  min-height: 34px;
+  padding: 5px 8px;
+  font-size: var(--fontsize-md);
   cursor: pointer;
+  border-bottom: 1px dashed #4b4b4b;
 }
 
 .sidebar-block:hover {
-  background-color: var(--color-hover);
-  border-radius: var(--radius-sm);
+  background: linear-gradient(
+    to right,
+    var(--color-sidebar),
+    var(--color-hover) 20%,
+    var(--color-hover) 80%,
+    var(--color-sidebar));
+}
+
+/* 현재 선택된 반 */
+.sidebar-list div.active {
+  background: linear-gradient(
+    to right,
+    var(--color-sidebar),
+    var(--color-hover) 20%,
+    var(--color-hover) 80%,
+    var(--color-sidebar));
+  /* background-color: var(--color-hover); */
+  color: var(--color-selected);
+  font-weight: bold;
+}
+
+.sidebar-block-subtitle {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-size: var(--fontsize-sm);
+  color: var(--color-text-sub);
+}
+
+.student-number {
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+
+  text-align: center;
+  align-content: center;
+
+  color: var(--color-text-sub);
+  box-shadow: 0 0 0 1px var(--color-line) inset;
 }
 
 .button-sm {
   height: 100%;
   padding: 0 8px;
-  font-size: 12px;
+  font-size: var(--fontsize-sm);
   align-content: center;
   cursor: pointer;
 }
