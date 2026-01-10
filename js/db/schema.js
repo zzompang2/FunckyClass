@@ -10,14 +10,14 @@ window.Schema = (function () {
     history: {
       table_name: "TEXT",
       row_id:     "INTEGER",
-      field:      "TEXT -- name / subject / teacher / sub_teacher / sub_subject",
+      field:      "TEXT /* name / subject / teacher / sub_teacher / sub_subject */",
       old_value:  "TEXT",
       new_value:  "TEXT",
       changed_at: "TEXT",
     },
     group_schedules: {
       group_id:   "INTEGER NOT NULL",
-      day:        "INTEGER DEFAULT 1 -- 0: 일 ~ 6: 토",
+      day:        "INTEGER DEFAULT 1 /* 0: 일 ~ 6: 토 */",
       start_time: "TEXT DEFAULT '13:00'",
       end_time:   "TEXT DEFAULT '23:00'"
     },
@@ -88,7 +88,7 @@ window.Schema = (function () {
     for (const [name, type] of Object.entries(columns)) {
       columnDefs.push(`${name} ${type}`);
     }
-    console.log("hello", tableName);
+    
     return `
       CREATE TABLE IF NOT EXISTS ${tableName} (
       ${columnDefs.join(",\n")}
