@@ -1,13 +1,29 @@
 :root {
   /* colors */
-  --color-bg: #191919;
-  --color-sidebar: #202020;
-  --color-text: #ffffff;
-  --color-text-sub: #9b9b9b;
-  --color-line: #505050;
-  --color-hover: #252525;
-  --color-button-hover: #6cecaa;
-  --color-selected: #6cecaa;
+  --color-container-900: #0C0E12;
+  --color-container-800: #1c1f27;
+  --color-container-700: #313746;
+  --color-container-600: #555F7B;
+  --color-container-500: #6E7A9F;
+  --color-container-400: #8794B8;
+  --color-container-300: #A2ACC8;
+  --color-container-200: #BCC4D8;
+  --color-container-100: #D7DBE7;
+  --color-container-50: #F2F3F7;
+  --color-container-white: #fff;
+
+  --color-text-light-1: #ffffff;
+  --color-text-light-2: #8794B8;
+  --color-text-light-3: #555F7B;
+
+  --color-brand-1: #4FADFF;
+  
+  --color-bg: var(--color-container-900);
+  --color-sidebar: var(--color-container-800);
+  --color-line: var(--color-container-700);
+  --color-hover: var(--color-container-700);
+  --color-button-hover: var(--color-brand-1);
+  --color-selected: var(--color-brand-1);
 
   /* sizes */
   --sidebar-width: 160px;
