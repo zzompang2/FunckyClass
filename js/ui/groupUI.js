@@ -19,26 +19,58 @@ window.groupUI = (function () {
     let html = `
       <div id="groupInfoCtn" style="display: flex; flex-wrap: wrap">
       <div class="table-container">
-      <div class="table-title">반 정보</div>
+      <div class="table-title">
+        반 정보
+        <button onclick="groupUI.addSchedule(${currentGroupId})">시간 추가</button>
+      </div>
       <table class="fit-size">
         <tbody>
-          <tr>
+          <tr class="hover-block" data-table="group" data-id="${group.id}">
             <th>반 이름</th>
-            <td id="groupName">${group.name}</td>
+            <td
+              data-col="name"
+              data-editable="true"
+              tabindex="0"
+              data-value="${group.name ?? ''}">${group.name}</td>
             <th>수업시간</th>
-            <td id="groupSchedules">${scheduleStr}</td>
+            <td class="schdule-td">
+            ${schedules.map(sc => `
+              <div
+                class="schedule-row"
+                onclick="openScheduleEditor(this)"
+                tabindex="0"
+                data-value='${JSON.stringify(sc)}'>
+                ${dayToText(sc.day)} ${sc.start_time}~${sc.end_time}
+              </div>
+            `).join('')}
           </tr>
-          <tr>
+          <tr class="hover-block">
             <th>담임</th>
-            <td id="groupName">${group.teacher}</td>
+            <td
+              data-col="teacher"
+              data-editable="true"
+              tabindex="0"
+              data-value="${group.teacher ?? ''}">${group.teacher}</td>
             <th>담임 과목</th>
-            <td id="groupSchedules">${group.subject}</td>
+            <td
+              data-col="subject"
+              data-editable="true"
+              tabindex="0"
+              data-value="${group.subject ?? ''}">${group.subject}</td>
           </tr>
-          <tr>
+          <tr class="hover-block">
             <th>부담임</th>
-            <td id="groupName">${group.sub_teacher}</td>
+            <td
+              data-col="sub_teacher"
+              data-editable="true"
+              tabindex="0"
+              data-value="${group.sub_teacher ?? ''}">${group.sub_teacher}</td>
             <th>부담임 과목</th>
-            <td id="groupSchedules">${group.sub_subject}</td>
+            <td
+              data-col="sub_subject"
+              data-editable="true"
+              tabindex="0"
+              data-value="${group.sub_subject ?? ''}">${group.sub_subject}</td>
           </tr>
         </tbody>
       </table>
@@ -56,6 +88,7 @@ window.groupUI = (function () {
       title: "수정 내역",
       columns: historyCols,
       closed: true,
+      editable: false,
     });
     
     // 학생 명단
@@ -69,6 +102,8 @@ window.groupUI = (function () {
       title: "학생 목록",
       columns: studentCols,
       button: addStudentBtn,
+      editable: true,
+      tableName: "students",
     });
     
     document.getElementById("groupInfoCtn").append(historyTable);
@@ -101,9 +136,31 @@ window.groupUI = (function () {
     openTab("info"); // 갱신
   }
 
+  function addSchedule() {
+    DB.addSchedule(currentGroupId);
+    openTab("info"); // 갱신
+  }
+
+  function deleteSchedule(id) {
+    DB.deleteSchedule(id);
+    openTab("info"); // 갱신
+  }
+
+  function updateSchedule(schedule) {
+    console.log(Object.keys(schedule), Object.values(schedule));
+    DB.update(
+      "group_schedules", schedule.id,
+      Object.keys(schedule), Object.values(schedule)
+    );
+    openTab("info"); // 갱신
+  }
+
   return {
     selectGroup,
     renderGroupInfoTab,
     addStudent,
+    addSchedule,
+    deleteSchedule,
+    updateSchedule,
   };
 })();

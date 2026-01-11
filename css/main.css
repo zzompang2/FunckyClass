@@ -2,6 +2,14 @@ html {
   scrollbar-color: var(--color-container-700) var(--color-container-900);
 }
 
+/* input 화살표 없애기 */
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 /* 텍스트 호버될 때 [text 커서]로 변경되는 것 없애기 */
 div {
   cursor: default;

@@ -146,7 +146,10 @@ window.DB = (function () {
     `, [groupId]);
 
     const schedulesRes = db.exec(`
-      SELECT * FROM group_schedules WHERE group_id=?
+      SELECT * 
+      FROM group_schedules 
+      WHERE group_id=?
+      ORDER BY day, start_time
     `, [groupId]);
     return [
       resultToObjects(groupRes[0])[0],
@@ -237,6 +240,32 @@ window.DB = (function () {
     );
   }
 
+   /**
+   * 
+   * @param {number} groupId 
+   */
+  function addSchedule(groupId) {
+    db.run(
+      "INSERT INTO group_schedules (group_id) VALUES (?)",
+      [groupId]
+    );
+  }
+
+  /**************/
+  /* UPDATE 관련 */
+  /**************/
+
+  function update(table, id, columns, values) {
+    db.run(
+      `UPDATE ${table} SET ${columns.map(c => `${c}=?`).join(", ")} WHERE id=?`,
+      [...values, id]
+    );
+  }
+
+  function deleteSchedule(id) {
+    db.run("DELETE FROM group_schedules WHERE id=?", [id]);
+  }
+
   return {
     // DB
     saveDB,
@@ -251,5 +280,10 @@ window.DB = (function () {
     getStudentsByGroup,
     // ADD
     addStudent,
+    addSchedule,
+    // UPDATE
+    update,
+    // DELETE
+    deleteSchedule,
   };
 })();

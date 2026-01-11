@@ -59,9 +59,6 @@ table.fit-size {
   font-weight: bold;
 }
 
-tr:hover {
-  background-color: var(--color-container-800);
-}
 
 th {
   padding: 6px 10px;
@@ -80,4 +77,90 @@ td.empty {
   font-style: oblique;
   text-align: center;
   color: var(--color-text-light-3);
+}
+
+
+/* SCHEDULE EDITOR */
+
+.schdule-td {
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* align-items: center; */
+  white-space: normal;
+  padding: 0;
+}
+
+.schedule-row {
+  width: 100%;
+  padding: 6px 10px;
+  box-sizing: border-box;
+  border-bottom: 1px dashed var(--color-line);
+}
+
+.schdule-td > div:last-child {
+  border-bottom: none;
+}
+
+.schedule-weekday {
+  margin: 4px 0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.schedule-weekday button {
+  padding: 4px 10px;
+  border: none;
+  color: var(--color-text-light-3);
+  background: var(--color-container-800);
+  cursor: pointer;
+}
+.schedule-weekday button.selected {
+  background: var(--color-brand-1);
+  color: var(--color-text-light-1);
+}
+
+.schedule-time {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 8px 0;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--color-container-800);
+}
+
+.schedule-time input {
+  padding: 4px 8px;
+  margin: 4px 2px;
+  border: none;
+  font-size: 16px;
+  color: var(--color-text-light-3);
+  background: var(--color-container-800);
+}
+
+.schedule-time input:focus {
+  outline: none;
+  color: var(--color-text-light-1);
+}
+
+/* HOVER */
+
+.schedule-row:hover {
+  background-color: var(--color-container-800);
+}
+
+tr:hover, td:hover {
+  background-color: var(--color-container-800);
+}
+
+.schdule-td:hover {
+  background-color: unset;
+}
+
+.hover-block:hover {
+  background-color: unset;
+}
+
+.editing:hover {
+  background-color: unset;
 }
