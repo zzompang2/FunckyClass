@@ -21,6 +21,34 @@ const editorType = {
   content:    "textarea",
   schedules:  "schedules",
 };
+const COLUMNS_HEIGHT = Object.freeze({
+  
+});
+const COLUMNS_WIDTH = Object.freeze({
+  name:         60,
+  teacher:      60,
+  sub_teacher:  60,
+  school:       60,
+  year:         68,
+  phone:        120,
+  parent_phone: 120,
+  parent:       50,
+  memo:         300,
+  day:          90,
+  changed_at:   90,
+  subject:      120,
+  sub_subject:  120,
+  exam_score:   200,
+  start_time:   200,
+  end_time:     200,
+  date:         200,
+  lesson:       200,
+  homework:     200,
+  exam:         200,
+  notice:       200,
+  content:      200,
+  schedules:    200,
+});
 
 /**
  * 객체 배열을 table로 변환.
@@ -57,13 +85,15 @@ function objectListToTable(list, options = {}) {
   const wrapper = document.createElement("div");
   wrapper.className = "table-wrapper";
   const table = document.createElement("table");
-  table.className = "full-size";
 
   // header
   const columns = options.columns || Object.keys(list[0]);
   let html = "<thead><tr>";
   columns.forEach(col => {
-    html += `<th>${STRINGS.columns[col]}</th>`;
+    html += `
+      <th
+        style="width: ${COLUMNS_WIDTH[col] ?? 500}px">
+        ${STRINGS.columns[col]}</th>`;
   });
   html += "</tr></thead>";
 
@@ -71,7 +101,12 @@ function objectListToTable(list, options = {}) {
   const editable = Boolean(options.editable && options.tableName);
   html += "<tbody>";
   if (list.length === 0) {
-    html += `<tr><td class="empty" colspan='${columns.length}'>요소가 하나도 없습니다.</td></tr>`;
+    html += `
+      <tr>
+        <td class="empty" colspan='${columns.length}'>
+          <div class="td-text">요소가 하나도 없습니다.</div>
+        </td>
+      </tr>`;
   } else {
     list.forEach(row => {
       html += `
@@ -92,7 +127,9 @@ function objectListToTable(list, options = {}) {
             data-col="${col}"
             data-editable="${editable}"
             tabindex="0"
-            data-value="${actualValue ?? ""}">${displayValue}</td>`;
+            data-value="${actualValue ?? ""}"
+            style="width: ${COLUMNS_WIDTH[col]}px">
+            <div class="td-text">${displayValue}</div></td>`;
       });
       html += "</tr>";
     });
@@ -233,14 +270,14 @@ function finishEdit(td, displayValue, newValue, table, col, id) {
     DB.update(table, id, [col], [newValue]);
     td.dataset.value = newValue;
     if (displayFunction[col]) {
-      td.innerText = displayFunction[col](newValue);
+      td.innerHTML = `<div class="td-text">${displayFunction[col](newValue)}</div>`;
     } else {
-      td.innerText = newValue;
+      td.innerHTML = `<div class="td-text">${newValue}</div>`;;
     }
     return;
   }
   // 값의 변화가 없는 경우
-  td.innerText = displayValue;
+  td.innerHTML = `<div class="td-text">${displayValue}</div>`;
 }
 
 /**
@@ -250,10 +287,9 @@ function finishEdit(td, displayValue, newValue, table, col, id) {
  * @returns 
  */
 function cancelEdit(td, displayValue) {
-  console.log("cancelEdit");
   if(!td.classList.contains("editing")) return;
   td.classList.remove("editing");
-  td.innerText = displayValue;
+  td.innerHTML = `<div class="td-text">${displayValue}</div>`;
 }
 
 
@@ -276,8 +312,8 @@ function openScheduleEditor(target) {
   /** @type {Schedule} */
   const schedule = JSON.parse(target.dataset.value);
   
-  const tr = document.createElement("tr");
-  tr.className = "hover-block";
+  const div = document.createElement("div");
+  div.className = "hover-block";
 
   // 요일 선택 버튼
   const daySelector = document.createElement("div");
@@ -286,7 +322,7 @@ function openScheduleEditor(target) {
   daySelector.innerHTML = [0,1,2,3,4,5,6].map(d =>
     `<button data-day="${d}" class="${d==schedule.day?'selected':''}">${"일월화수목금토"[d]}</button>`
   ).join("");
-  tr.append(daySelector);
+  div.append(daySelector);
 
   daySelector.addEventListener("click", e => {
     const btn = e.target.closest("button");
@@ -308,7 +344,7 @@ function openScheduleEditor(target) {
       <input type="number" min="0" max="23" value="${timeArr[2]}"> :
       <input type="number" min="0" max="59" step="5" value="${timeArr[3]}">
     `;
-  tr.append(timeSelector);
+  div.append(timeSelector);
 
   const completeBtn = document.createElement("button");
   completeBtn.innerText = "완료";
@@ -323,7 +359,16 @@ function openScheduleEditor(target) {
       end_time:   `${("0"+timeArr[2]%24).slice(-2)}:${("0"+timeArr[3]%60).slice(-2)}`,
     });
   });
-  tr.append(completeBtn);
+  div.append(completeBtn);
+
+  const cancelBtn = document.createElement("button");
+  cancelBtn.type = "button";
+  cancelBtn.innerText = "취소";
+  cancelBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    closeScheduleEditor(target, schedule);
+  });
+  div.append(cancelBtn);
 
   const deleteBtn = document.createElement("button");
   deleteBtn.innerText = "삭제";
@@ -331,36 +376,18 @@ function openScheduleEditor(target) {
     if (!confirm(STRINGS.db.confirmDelete)) return;
     groupUI.deleteSchedule(schedule.id);
   });
-  tr.append(deleteBtn);
+  div.append(deleteBtn);
 
   target.innerHTML = "";
-  target.append(tr);
-  target.querySelector("input").focus();
+  target.append(div);
+  target.querySelector("input").select();
+}
 
-  tr.addEventListener("keydown", e => {
-    console.log(e.target);
-    // if (e.target.tagName === "TEXTAREA") {
-    //   if ((e.key === "Enter" && e.metaKey) || (e.key === "Enter" && e.ctrlKey)) {
-    //     e.preventDefault();
-    //     finishEdit(td, displayValue, editor.value, table, col, id);
-    //     return;
-    //   }
-    // } else {
-    //   if (e.key === "Enter") {
-    //     e.preventDefault();
-    //     finishEdit(td, displayValue, editor.value, table, col, id);
-    //     return;
-    //   }
-    // }
-      
-    // if (e.key === "Escape") {
-    //   e.preventDefault();
-    //   cancelEdit(td, displayValue);
-    //   return;
-    // }
-  });
-
-  tr.addEventListener("blur", () => {
-    finishEdit(td, displayValue, editor.value, table, col, id);
-  });
+function closeScheduleEditor(target, schedule) {
+  if (!target || !target.classList.contains("editing")) return;
+  target.classList.remove("editing");
+  
+  target.innerHTML = `
+    ${dayToText(schedule.day)} ${schedule.start_time}~${schedule.end_time}
+  `;
 }

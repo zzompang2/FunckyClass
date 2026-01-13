@@ -15,7 +15,6 @@ window.groupUI = (function () {
     /** @type {[Group, Schedule[]]} */
     const [group, schedules] = DB.getGroupById(currentGroupId);
 
-    const scheduleStr = schedules.map(sc => `${dayToText(sc.day)} ${sc.start_time}~${sc.end_time}`).join("\n");
     let html = `
       <div id="groupInfoCtn" style="display: flex; flex-wrap: wrap">
       <div class="table-container">
@@ -23,15 +22,17 @@ window.groupUI = (function () {
         반 정보
         <button onclick="groupUI.addSchedule(${currentGroupId})">시간 추가</button>
       </div>
-      <table class="fit-size">
+      <table>
         <tbody>
-          <tr class="hover-block" data-table="group" data-id="${group.id}">
+          <tr class="hover-block" data-table="groups" data-id="${group.id}">
             <th>반 이름</th>
             <td
               data-col="name"
               data-editable="true"
               tabindex="0"
-              data-value="${group.name ?? ''}">${group.name}</td>
+              data-value="${group.name ?? ''}"
+              style="width: ${COLUMNS_WIDTH["name"]}px">
+              <div class="td-text">${group.name}</div></td>
             <th>수업시간</th>
             <td class="schdule-td">
             ${schedules.map(sc => `
@@ -44,33 +45,41 @@ window.groupUI = (function () {
               </div>
             `).join('')}
           </tr>
-          <tr class="hover-block">
+          <tr class="hover-block" data-table="groups" data-id="${group.id}">
             <th>담임</th>
             <td
               data-col="teacher"
               data-editable="true"
               tabindex="0"
-              data-value="${group.teacher ?? ''}">${group.teacher}</td>
+              data-value="${group.teacher ?? ''}"
+              style="width: ${COLUMNS_WIDTH['teacher']}px">
+              <div class="td-text">${group.teacher}</div></td>
             <th>담임 과목</th>
             <td
               data-col="subject"
               data-editable="true"
               tabindex="0"
-              data-value="${group.subject ?? ''}">${group.subject}</td>
+              data-value="${group.subject ?? ''}"
+              style="width: ${COLUMNS_WIDTH['subject']}px">
+              <div class="td-text">${group.subject}</div></td>
           </tr>
-          <tr class="hover-block">
+          <tr class="hover-block" data-table="groups" data-id="${group.id}">
             <th>부담임</th>
             <td
               data-col="sub_teacher"
               data-editable="true"
               tabindex="0"
-              data-value="${group.sub_teacher ?? ''}">${group.sub_teacher}</td>
+              data-value="${group.sub_teacher ?? ''}"
+              style="width: ${COLUMNS_WIDTH['sub-teacher']}px">
+              <div class="td-text">${group.sub_teacher}</div></td>
             <th>부담임 과목</th>
             <td
               data-col="sub_subject"
               data-editable="true"
               tabindex="0"
-              data-value="${group.sub_subject ?? ''}">${group.sub_subject}</td>
+              data-value="${group.sub_subject ?? ''}"
+              style="width: ${COLUMNS_WIDTH['sub_subject']}px">
+              <div class="td-text">${group.sub_subject}</div></td>
           </tr>
         </tbody>
       </table>

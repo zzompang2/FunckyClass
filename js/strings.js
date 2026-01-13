@@ -17,7 +17,7 @@ window.STRINGS = {
     school: "학교",
     year: "학년",
     phone: "전화번호",
-    parent: "부모님",
+    parent: "부모",
     parent_phone: "부모님 번호",
     memo: "메모",
   },
