@@ -51,6 +51,7 @@ function openTab(tab = currentTab) {
   }
 
   if (tab === "plans") {
+    planUI.renderPlanTab(area);
     return;
   }
 

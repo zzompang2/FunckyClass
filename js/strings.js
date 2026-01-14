@@ -20,5 +20,10 @@ window.STRINGS = {
     parent: "부모",
     parent_phone: "부모님 번호",
     memo: "메모",
+    date: "날짜",
+    lesson: "수업 계획",
+    homework: "과제",
+    exam: "테스트",
+    notice: "공지",
   },
 };

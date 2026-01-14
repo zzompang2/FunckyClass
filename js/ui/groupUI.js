@@ -22,6 +22,7 @@ window.groupUI = (function () {
         반 정보
         <button onclick="groupUI.addSchedule(${currentGroupId})">시간 추가</button>
       </div>
+      <div class="table-wrapper">
       <table>
         <tbody>
           <tr class="hover-block" data-table="groups" data-id="${group.id}">
@@ -83,6 +84,7 @@ window.groupUI = (function () {
           </tr>
         </tbody>
       </table>
+      </div>
       </div></div></div>
     `;
 
@@ -139,7 +141,6 @@ window.groupUI = (function () {
    * student 데이터를 DB에 추가하고 reload
    */
   function addStudent() {
-    console.log("scroll", document.getElementsByClassName("scroll-wrap")[0].scrollTop);
     DB.addStudent(currentGroupId);
     DB.saveDB();
     openTab("info"); // 갱신
@@ -156,7 +157,6 @@ window.groupUI = (function () {
   }
 
   function updateSchedule(schedule) {
-    console.log(Object.keys(schedule), Object.values(schedule));
     DB.update(
       "group_schedules", schedule.id,
       Object.keys(schedule), Object.values(schedule)

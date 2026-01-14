@@ -229,6 +229,27 @@ window.DB = (function () {
   }
 
   /**
+   * groupId의 모든 계획 데이터 (날짜순)
+   * @param {number} groupId 
+   * @returns {Plan[]}
+   */
+  function getPlansByGroup(groupId) {
+    const res = db.exec(`
+      SELECT *
+      FROM plans
+      WHERE group_id = ?
+      ORDER BY (date IS '') DESC, date DESC`,
+      [groupId]
+    );
+    return resultToObjects(res[0]);
+  }
+
+
+  /***********/
+  /* ADD 관련 */
+  /***********/
+
+  /**
    * 
    * @param {number} groupId 
    * @param {string} name 
@@ -251,6 +272,25 @@ window.DB = (function () {
     );
   }
 
+  /**
+   * 
+   * @param {number} groupId 
+   * @param {string} date 
+   * @param {string} lesson 
+   * @param {string} homework 
+   * @param {string} exam 
+   */
+  function addPlan(groupId, date = "", lesson = "", homework = "", exam = "") {
+    db.run(
+      `INSERT INTO plans (group_id, date, lesson, homework, exam)
+      VALUES (?, ?, ?, ?, ?)`,
+      [
+        groupId, date, lesson, homework, exam
+      ]
+    );
+  }
+
+
   /**************/
   /* UPDATE 관련 */
   /**************/
@@ -261,6 +301,11 @@ window.DB = (function () {
       [...values, id]
     );
   }
+
+
+  /**************/
+  /* DELETE 관련 */
+  /**************/
 
   function deleteSchedule(id) {
     db.run("DELETE FROM group_schedules WHERE id=?", [id]);
@@ -278,9 +323,11 @@ window.DB = (function () {
     getGroupsWithSchedules,
     getHistoryByGroup,
     getStudentsByGroup,
+    getPlansByGroup,
     // ADD
     addStudent,
     addSchedule,
+    addPlan,
     // UPDATE
     update,
     // DELETE

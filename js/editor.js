@@ -1,5 +1,6 @@
 const displayFunction = {
   year: formatGradeFromYear,
+  date: formatDateKorean,
 };
 const editorType = {
   row_id:     "number",
@@ -21,9 +22,6 @@ const editorType = {
   content:    "textarea",
   schedules:  "schedules",
 };
-const COLUMNS_HEIGHT = Object.freeze({
-  
-});
 const COLUMNS_WIDTH = Object.freeze({
   name:         60,
   teacher:      60,
@@ -33,15 +31,15 @@ const COLUMNS_WIDTH = Object.freeze({
   phone:        120,
   parent_phone: 120,
   parent:       50,
-  memo:         300,
-  day:          90,
-  changed_at:   90,
+  memo:         200,
+  day:          100,
+  changed_at:   100,
+  date:         95,
   subject:      120,
   sub_subject:  120,
   exam_score:   200,
   start_time:   200,
   end_time:     200,
-  date:         200,
   lesson:       200,
   homework:     200,
   exam:         200,
@@ -62,6 +60,7 @@ const COLUMNS_WIDTH = Object.freeze({
  *   closed?: boolean,
  *   editable?: boolean,
  *   tableName?: string,
+ *   size?: "full" | "fit",
  * }} options
  * @returns {HTMLElement} <table> HTML
  */
@@ -85,21 +84,27 @@ function objectListToTable(list, options = {}) {
   const wrapper = document.createElement("div");
   wrapper.className = "table-wrapper";
   const table = document.createElement("table");
+  if (options.size == "fit") {
+    table.style.width = "auto";
+  } else if (options.size == "full") {
+    table.style.width = "100%";
+  }
 
-  // header
+  /* HEADER */
   const columns = options.columns || Object.keys(list[0]);
+  const editable = Boolean(options.editable && options.tableName);
   let html = "<thead><tr>";
   columns.forEach(col => {
     html += `
       <th
-        style="width: ${COLUMNS_WIDTH[col] ?? 500}px">
-        ${STRINGS.columns[col]}</th>`;
+        ${COLUMNS_WIDTH[col] ? `style="width: ${COLUMNS_WIDTH[col]}px; min-width: ${COLUMNS_WIDTH[col]}px"` : ''}>
+        ${STRINGS.columns[col] ?? col}</th>`;
   });
   html += "</tr></thead>";
 
-  // body
-  const editable = Boolean(options.editable && options.tableName);
+  /* BODY */
   html += "<tbody>";
+  // 요소가 하나도 없을 때
   if (list.length === 0) {
     html += `
       <tr>
@@ -110,8 +115,10 @@ function objectListToTable(list, options = {}) {
   } else {
     list.forEach(row => {
       html += `
-        <tr data-table="${options.tableName ?? ''}" data-id="${row.id ?? ''}">
+      <tr data-table="${options.tableName ?? ''}" data-id="${row.id ?? ''}">
       `;
+
+      // 데이터 td
       columns.forEach(col => {
         const actualValue = row[col];
         let displayValue;
@@ -128,7 +135,7 @@ function objectListToTable(list, options = {}) {
             data-editable="${editable}"
             tabindex="0"
             data-value="${actualValue ?? ""}"
-            style="width: ${COLUMNS_WIDTH[col]}px">
+            ${COLUMNS_WIDTH[col] ? `style="width: ${COLUMNS_WIDTH[col]}px; min-width: ${COLUMNS_WIDTH[col]}px"` : ''}>
             <div class="td-text">${displayValue}</div></td>`;
       });
       html += "</tr>";
@@ -189,9 +196,19 @@ function createEditor(col, rawValue) {
   if (editorType[col] == "textarea") {
     const ta = document.createElement("textarea");
     ta.value = rawValue ?? "";
-    ta.rows = 4;
+    ta.rows = 1;
     ta.style.width = "100%";
     ta.style.boxSizing = "border-box";
+    ta.addEventListener('focus', (e) => {
+      // 포커스 시 현재 내용에 맞춰 높이 조절
+      e.target.style.height = 'auto';
+      e.target.style.height = e.target.scrollHeight + 'px';
+    });
+    ta.addEventListener('input', function() {
+      // 입력할 때마다 텍스트에 맞춰 높이 조절
+      this.style.height = 'auto';
+      this.style.height = this.scrollHeight + 'px';
+    });
     return ta;
   }
   
@@ -199,6 +216,15 @@ function createEditor(col, rawValue) {
   const input = document.createElement("input");
   input.type = editorType[col] ?? "text";
   input.value = rawValue ?? "";
+  if (editorType[col] == "date") {
+    input.addEventListener("focus", (e) => {
+      // 입력된 값이 없을 때, 오늘 날짜로 초기화
+      if (!e.target.value) {
+        e.target.value = getTodayDate();
+      }
+    })
+  }
+
   return input;
 }
 
