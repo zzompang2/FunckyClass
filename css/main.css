@@ -81,3 +81,20 @@ body {
   overflow-y: auto;
   flex: 1;
 }
+
+.no-scrollbar {
+  /* 1. 크롬, 사파리, 엣지 (WebKit 브라우저) */
+  &::-webkit-scrollbar {
+      display: none;
+  }
+
+  /* 2. 파이어폭스 (표준 속성) */
+  scrollbar-width: none;
+
+  /* 3. 인터넷 익스플로러 및 구형 엣지 */
+  -ms-overflow-style: none;
+}
+
+.tab-content {
+  padding-bottom: 40px; /* 스크롤 맨 아래까지 내렸을 때 여유 주기 */
+}

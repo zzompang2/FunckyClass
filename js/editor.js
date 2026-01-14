@@ -26,7 +26,7 @@ const COLUMNS_WIDTH = Object.freeze({
   name:         60,
   teacher:      60,
   sub_teacher:  60,
-  school:       60,
+  school:       65,
   year:         68,
   phone:        120,
   parent_phone: 120,
@@ -82,7 +82,7 @@ function objectListToTable(list, options = {}) {
 
   /* table 생성 */
   const wrapper = document.createElement("div");
-  wrapper.className = "table-wrapper";
+  wrapper.className = "table-wrapper no-scrollbar";
   const table = document.createElement("table");
   if (options.size == "fit") {
     table.style.width = "auto";
@@ -141,7 +141,7 @@ function objectListToTable(list, options = {}) {
       html += "</tr>";
     });
   }
-  html += `</tbody></table>`;
+  html += `</tbody>`;
   
   table.innerHTML = html;
 
