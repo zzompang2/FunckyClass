@@ -122,12 +122,12 @@ async function startApp() {
   /* 데이터 수정 기능 추가 */
   document.addEventListener("click", e => {
     // 클릭된 요소 중에 editable인 요소 찾기
-    const td = e.target.closest("td[data-editable='true']");
+    const tdata = e.target.closest("div[data-editable='true']");
 
     // 수정 불가능한 영역이거나 이미 수정 중인 경우 return
-    if (!td || td.classList.contains("editing")) return;
+    if (!tdata || tdata.classList.contains("editing")) return;
     
     // 수정 가능한 영역 클릭 시 수정 가능한 형태로 변경
-    startEdit(td);
+    startEdit(tdata);
   });
 }

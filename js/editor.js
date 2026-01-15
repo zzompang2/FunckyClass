@@ -22,30 +22,36 @@ const editorType = {
   content:    "textarea",
   schedules:  "schedules",
 };
+const WIDTH_NUM = Object.freeze({
+  name:   70,
+  day:    100,
+  medium: 120,
+  long:   200,
+});
 const COLUMNS_WIDTH = Object.freeze({
-  name:         60,
-  teacher:      60,
-  sub_teacher:  60,
+  name:         WIDTH_NUM.name,
+  teacher:      WIDTH_NUM.name,
+  sub_teacher:  WIDTH_NUM.name,
   school:       65,
   year:         68,
-  phone:        120,
-  parent_phone: 120,
+  phone:        WIDTH_NUM.medium,
+  parent_phone: WIDTH_NUM.medium,
   parent:       50,
-  memo:         200,
-  day:          100,
-  changed_at:   100,
+  day:          WIDTH_NUM.day,
+  changed_at:   WIDTH_NUM.day,
   date:         95,
-  subject:      120,
-  sub_subject:  120,
-  exam_score:   200,
-  start_time:   200,
-  end_time:     200,
-  lesson:       200,
-  homework:     200,
-  exam:         200,
-  notice:       200,
-  content:      200,
-  schedules:    200,
+  subject:      WIDTH_NUM.medium,
+  sub_subject:  WIDTH_NUM.medium,
+  memo:         WIDTH_NUM.long,
+  exam_score:   WIDTH_NUM.long,
+  start_time:   WIDTH_NUM.long,
+  end_time:     WIDTH_NUM.long,
+  lesson:       WIDTH_NUM.long,
+  homework:     WIDTH_NUM.long,
+  exam:         WIDTH_NUM.long,
+  notice:       WIDTH_NUM.long,
+  content:      WIDTH_NUM.long,
+  schedules:    WIDTH_NUM.long,
 });
 
 /**
@@ -83,7 +89,8 @@ function objectListToTable(list, options = {}) {
   /* table 생성 */
   const wrapper = document.createElement("div");
   wrapper.className = "table-wrapper no-scrollbar";
-  const table = document.createElement("table");
+  const table = document.createElement("div");
+  table.className = "table";
   if (options.size == "fit") {
     table.style.width = "auto";
   } else if (options.size == "full") {
@@ -93,55 +100,56 @@ function objectListToTable(list, options = {}) {
   /* HEADER */
   const columns = options.columns || Object.keys(list[0]);
   const editable = Boolean(options.editable && options.tableName);
-  let html = "<thead><tr>";
+  let html = `<div class="thead"><div class="row">`;
   columns.forEach(col => {
     html += `
-      <th
+      <div class="th"
         ${COLUMNS_WIDTH[col] ? `style="width: ${COLUMNS_WIDTH[col]}px; min-width: ${COLUMNS_WIDTH[col]}px"` : ''}>
-        ${STRINGS.columns[col] ?? col}</th>`;
+        ${STRINGS.columns[col] ?? col}</div>`;
   });
-  html += "</tr></thead>";
+  html += "</div></div>";
 
   /* BODY */
-  html += "<tbody>";
+  html += "<div class='tbody'>";
   // 요소가 하나도 없을 때
   if (list.length === 0) {
     html += `
-      <tr>
-        <td class="empty" colspan='${columns.length}'>
+      <div class="row">
+        <div class="tdata" class="empty" colspan='${columns.length}'>
           <div class="td-text">요소가 하나도 없습니다.</div>
-        </td>
-      </tr>`;
+        </div>
+      </div>`;
   } else {
     list.forEach(row => {
       html += `
-      <tr data-table="${options.tableName ?? ''}" data-id="${row.id ?? ''}">
+      <div class="row" data-table="${options.tableName ?? ''}" data-id="${row.id ?? ''}">
       `;
 
-      // 데이터 td
+      // 데이터 tdata
       columns.forEach(col => {
         const actualValue = row[col];
         let displayValue;
         if (!actualValue)
-          displayValue = "-"
+          displayValue = "";
         else if (displayFunction[col])
           displayValue = displayFunction[col](row[col]);
         else
           displayValue = actualValue;
         
         html += `
-          <td
+          <div
+            class="tdata"
             data-col="${col}"
             data-editable="${editable}"
             tabindex="0"
             data-value="${actualValue ?? ""}"
             ${COLUMNS_WIDTH[col] ? `style="width: ${COLUMNS_WIDTH[col]}px; min-width: ${COLUMNS_WIDTH[col]}px"` : ''}>
-            <div class="td-text">${displayValue}</div></td>`;
+            <div class="td-text">${displayValue}</div></div>`;
       });
-      html += "</tr>";
+      html += "</div>";
     });
   }
-  html += `</tbody>`;
+  html += `</div>`;
   
   table.innerHTML = html;
 
@@ -231,54 +239,54 @@ function createEditor(col, rawValue) {
 /**
  * editable한 객체를 클릭했을 때 실행.
  * 클린한 객체를 수정 가능한 input 객체로 바꾼다.
- * @param {HTMLElement} td 
+ * @param {HTMLElement} tdata 
  */
-function startEdit(td) {
-  const displayValue = td.innerText;
-  const col = td.dataset.col;
-  const tr = td.closest("tr");
-  const id = tr.dataset.id;
-  const table = tr.dataset.table;
+function startEdit(tdata) {
+  const displayValue = tdata.innerText;
+  const col = tdata.dataset.col;
+  const row = tdata.closest("div.row");
+  const id = row.dataset.id;
+  const table = row.dataset.table;
 
-  td.classList.add("editing");
+  tdata.classList.add("editing");
 
-  const editor = createEditor(col, td.dataset.value);
+  const editor = createEditor(col, tdata.dataset.value);
 
-  td.innerHTML = "";
-  td.append(editor);
+  tdata.innerHTML = "";
+  tdata.append(editor);
   editor.focus();
 
   editor.addEventListener("keydown", e => {
     if (e.target.tagName === "TEXTAREA") {
       if ((e.key === "Enter" && e.metaKey) || (e.key === "Enter" && e.ctrlKey)) {
         e.preventDefault();
-        finishEdit(td, displayValue, editor.value, table, col, id);
+        finishEdit(tdata, displayValue, editor.value, table, col, id);
         return;
       }
     } else {
       if (e.key === "Enter") {
         e.preventDefault();
-        finishEdit(td, displayValue, editor.value, table, col, id);
+        finishEdit(tdata, displayValue, editor.value, table, col, id);
         return;
       }
     }
       
     if (e.key === "Escape") {
       e.preventDefault();
-      cancelEdit(td, displayValue);
+      cancelEdit(tdata, displayValue);
       return;
     }
   });
 
   editor.addEventListener("blur", () => {
-    finishEdit(td, displayValue, editor.value, table, col, id);
+    finishEdit(tdata, displayValue, editor.value, table, col, id);
   });
 }
 
 /**
  * 수정을 마무리한다.
  * 값이 변했으면 DB 업데이트, 수정되지 않았다면 변화 없음.
- * @param {*} td 
+ * @param {*} tdata 
  * @param {*} displayValue 편집 이전의 display 값
  * @param {*} newValue 새로 입력한 raw 값
  * @param {*} table 
@@ -286,36 +294,36 @@ function startEdit(td) {
  * @param {*} id 
  * @returns 
  */
-function finishEdit(td, displayValue, newValue, table, col, id) {
+function finishEdit(tdata, displayValue, newValue, table, col, id) {
   console.log("finishEdit", displayValue, newValue, table, col, id);
-  if(!td.classList.contains("editing")) return;
-  td.classList.remove("editing");
+  if(!tdata.classList.contains("editing")) return;
+  tdata.classList.remove("editing");
 
   // 값의 변화가 있는 경우
-  if (newValue !== td.dataset.value) {
+  if (newValue !== tdata.dataset.value) {
     DB.update(table, id, [col], [newValue]);
-    td.dataset.value = newValue;
+    tdata.dataset.value = newValue;
     if (displayFunction[col]) {
-      td.innerHTML = `<div class="td-text">${displayFunction[col](newValue)}</div>`;
+      tdata.innerHTML = `<div class="td-text">${displayFunction[col](newValue)}</div>`;
     } else {
-      td.innerHTML = `<div class="td-text">${newValue}</div>`;;
+      tdata.innerHTML = `<div class="td-text">${newValue}</div>`;;
     }
     return;
   }
   // 값의 변화가 없는 경우
-  td.innerHTML = `<div class="td-text">${displayValue}</div>`;
+  tdata.innerHTML = `<div class="td-text">${displayValue}</div>`;
 }
 
 /**
  * 수정 상태를 취소하고 이전 값으로 되돌린다.
- * @param {*} td 
+ * @param {*} tdata 
  * @param {*} displayValue 편집 이전의 display 값
  * @returns 
  */
-function cancelEdit(td, displayValue) {
-  if(!td.classList.contains("editing")) return;
-  td.classList.remove("editing");
-  td.innerHTML = `<div class="td-text">${displayValue}</div>`;
+function cancelEdit(tdata, displayValue) {
+  if(!tdata.classList.contains("editing")) return;
+  tdata.classList.remove("editing");
+  tdata.innerHTML = `<div class="td-text">${displayValue}</div>`;
 }
 
 

@@ -23,20 +23,22 @@ window.groupUI = (function () {
         <button onclick="groupUI.addSchedule(${currentGroupId})">시간 추가</button>
       </div>
       <div class="table-wrapper">
-      <table>
-        <tbody>
-          <tr class="hover-block" data-table="groups" data-id="${group.id}">
-            <th>반 이름</th>
-            <td
+      <div class="table">
+        <div class="tbody">
+          <div class="row hover-block" data-table="groups" data-id="${group.id}">
+            <div class="th" style="width: 64px">반 이름</div>
+            <div
+              class="tdata"
               data-col="name"
               data-editable="true"
               tabindex="0"
               data-value="${group.name ?? ''}"
               style="width: ${COLUMNS_WIDTH["name"]}px">
-              <div class="td-text">${group.name}</div></td>
-            <th>수업시간</th>
-            <td class="schdule-td">
-            ${schedules.map(sc => `
+              <div class="td-text">${group.name}</div>
+            </div>
+            <div class="th" style="width: 90px">수업시간</div>
+            <div class="schdule-td" style="width: 120px">
+              ${schedules.map(sc => `
               <div
                 class="schedule-row"
                 onclick="openScheduleEditor(this)"
@@ -44,46 +46,55 @@ window.groupUI = (function () {
                 data-value='${JSON.stringify(sc)}'>
                 ${dayToText(sc.day)} ${sc.start_time}~${sc.end_time}
               </div>
-            `).join('')}
-          </tr>
-          <tr class="hover-block" data-table="groups" data-id="${group.id}">
-            <th>담임</th>
-            <td
+              `).join('')}
+            </div>
+          </div>
+          <div class="row hover-block" data-table="groups" data-id="${group.id}">
+            <div class="th" style="width: 64px">담임</div>
+            <div
+              class="tdata"
               data-col="teacher"
               data-editable="true"
               tabindex="0"
               data-value="${group.teacher ?? ''}"
               style="width: ${COLUMNS_WIDTH['teacher']}px">
-              <div class="td-text">${group.teacher}</div></td>
-            <th>담임 과목</th>
-            <td
+              <div class="td-text">${group.teacher}</div>
+            </div>
+            <div class="th" style="width: 90px">담임 과목</div>
+            <div
+              class="tdata"
               data-col="subject"
               data-editable="true"
               tabindex="0"
               data-value="${group.subject ?? ''}"
               style="width: ${COLUMNS_WIDTH['subject']}px">
-              <div class="td-text">${group.subject}</div></td>
-          </tr>
-          <tr class="hover-block" data-table="groups" data-id="${group.id}">
-            <th>부담임</th>
-            <td
+              <div class="td-text">${group.subject}</div>
+            </div>
+          </div>
+          <div class="row hover-block" data-table="groups" data-id="${group.id}">
+            <div class="th" style="width: 64px">부담임</div>
+            <div
+              class="tdata"
               data-col="sub_teacher"
               data-editable="true"
               tabindex="0"
               data-value="${group.sub_teacher ?? ''}"
-              style="width: ${COLUMNS_WIDTH['sub-teacher']}px">
-              <div class="td-text">${group.sub_teacher}</div></td>
-            <th>부담임 과목</th>
-            <td
+              style="width: ${COLUMNS_WIDTH['sub_teacher']}px">
+              <div class="td-text">${group.sub_teacher}</div>
+            </div>
+            <div class="th" style="width: 90px">부담임 과목</div>
+            <div
+              class="tdata"
               data-col="sub_subject"
               data-editable="true"
               tabindex="0"
               data-value="${group.sub_subject ?? ''}"
               style="width: ${COLUMNS_WIDTH['sub_subject']}px">
-              <div class="td-text">${group.sub_subject}</div></td>
-          </tr>
-        </tbody>
-      </table>
+              <div class="td-text">${group.sub_subject}</div>
+            </div>
+          </div>
+        </div>
+      </div>
       </div>
       </div></div></div>
     `;
