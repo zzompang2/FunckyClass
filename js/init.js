@@ -118,6 +118,7 @@ async function startApp() {
 
   sidebarUI.loadGroups();
   sidebarUI.loadLocalbar();
+  createContextMenu();
 
   /* 데이터 수정 기능 추가 */
   document.addEventListener("click", e => {

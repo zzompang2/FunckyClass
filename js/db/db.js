@@ -311,6 +311,11 @@ window.DB = (function () {
     db.run("DELETE FROM group_schedules WHERE id=?", [id]);
   }
 
+  function deleteRow(tableName, id) {
+    db.run(`DELETE FROM ${tableName} WHERE id=?`, [id]);
+    saveDB();
+  }
+
   return {
     // DB
     saveDB,
@@ -332,5 +337,6 @@ window.DB = (function () {
     update,
     // DELETE
     deleteSchedule,
+    deleteRow,
   };
 })();

@@ -146,10 +146,11 @@ function objectListToTable(list, options = {}) {
             ${COLUMNS_WIDTH[col] ? `style="width: ${COLUMNS_WIDTH[col]}px; min-width: ${COLUMNS_WIDTH[col]}px"` : ''}>
             <div class="td-text">${displayValue}</div></div>`;
       });
-      html += "</div>";
+      html += `<div class="row-menu-button" onclick="openContextMenu(event)">⋮</div>`;
+      html += "</div>"; // div.row
     });
   }
-  html += `</div>`;
+  html += `</div>`; //div.tbody
   
   table.innerHTML = html;
 
@@ -424,4 +425,115 @@ function closeScheduleEditor(target, schedule) {
   target.innerHTML = `
     ${dayToText(schedule.day)} ${schedule.start_time}~${schedule.end_time}
   `;
+}
+
+
+/* CONTEXT MENU */
+
+/** @type {HTMLElement | null} */
+let currentRow = null; // 선택된 행 객체
+
+function createContextMenu() {
+  const menusInfo = [
+    { action: "add-below", label: "아래에 추가" },
+    { action: "delete", label: "삭제" },
+  ];
+
+  // 메뉴창 생성
+  const contextMenu = document.createElement("div");
+  contextMenu.id = "contextMenu";
+  let html = '';
+  menusInfo.forEach(menu => {
+    html += `<div class="menu-item" data-action="${menu.action}">${menu.label}</div>`
+  })
+  contextMenu.innerHTML = html;
+
+  // 우클릭 되었을 때 메뉴 띄우기
+  document.addEventListener("contextmenu", openContextMenu);
+
+  // 메뉴 클릭 동작
+  contextMenu.addEventListener("click", (e) => {
+    const action = e.target.dataset.action;
+    if (!action || !currentRow) return;
+
+    if (action === "delete") {
+      const { table, id } = currentRow.dataset;
+      if (confirm("삭제할까요?")) {
+        DB.deleteRow(table, id);
+        currentRow.remove();
+      }
+    }
+    hideContextMenu();
+  });
+  // document.body.append(menuButton);
+  document.body.append(contextMenu);
+
+  // 메뉴 닫기
+  document.addEventListener("click", hideContextMenu);
+  document.addEventListener("scroll", hideContextMenu);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      hideContextMenu();
+    }
+  });
+}
+
+function openContextMenu(e) {
+  const row = e.target.closest("div.row");
+  if (!row || !row.dataset.id) return;
+
+  e.preventDefault();  // default context 나오지 않도록 하기
+  e.stopPropagation(); // document 클릭으로 hideContextMenu 실행 방지 
+  hideContextMenu();   // 다른 곳에 이미 메뉴가 띄워져 있는 경우
+
+  currentRow = row;
+  row.classList.add("selected");
+
+  const menu = document.getElementById("contextMenu");
+
+  // 스크롤 막기
+  document.addEventListener("wheel", preventScroll, { passive: false });
+
+  // 1. 일단 보이게 (크기 측정용)
+  menu.style.display = "block";
+  menu.style.visibility = "hidden";
+
+  const menuWidth = menu.offsetWidth;
+  const menuHeight = menu.offsetHeight;
+
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
+
+  let x = e.pageX;
+  let y = e.pageY;
+
+  // 2. 오른쪽으로 넘칠 경우 → 왼쪽으로
+  if (x + menuWidth > viewportWidth) {
+    x = viewportWidth - menuWidth - 8;
+  }
+
+  // 3. 아래로 넘칠 경우 → 위쪽으로
+  if (y + menuHeight > viewportHeight) {
+    y = viewportHeight - menuHeight - 8;
+  }
+
+  // 4. 최종 위치 적용
+  menu.style.left = `${x}px`;
+  menu.style.top = `${y}px`;
+
+  menu.style.visibility = "visible";
+}
+
+function hideContextMenu() {
+  if (!currentRow) return;
+  document.getElementById("contextMenu").style.display = "none";
+  currentRow.classList.remove("selected");
+  currentRow = null;
+
+  // 스크롤 복구
+  document.removeEventListener("wheel", preventScroll);
+}
+
+function preventScroll(e) {
+  e.preventDefault();
 }
