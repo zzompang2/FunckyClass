@@ -1,0 +1,34 @@
+모든 테이블에 기본적으로 추가.
+  id INTEGER PRIMARY KEY AUTOINCREMENT
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+
+groups: { name }
+
+teachers: { name, memo }
+
+group_teachers: { teacher_id, group_id, role, memo }
+
+schedules: { group_id, teacher_id, day, start_time, end_time }
+
+students: { name, school, grade, phone, parent, parent_phone, memo }
+
+group_students: { group_id, student_id }
+
+change_logs: { table_name, record_id, action, changed_fields, before_value, after_value, changed_at }
+// table_name: 
+
+attendance_records: { date, student_id, status, memo }
+// status: 출석, 지각, 결석
+
+plans: { group_id, date, memo, lesson, homework, exam_id }
+
+plan_overrides: { plan_id, student_id, lesson, homework }
+// UNIQUE(plan_id, student_id)
+
+exams: { title, unit, difficulty, question_number, full_score, memo }
+
+exam_scores: { exam_id, student_id, date, score, memo }
+
+math_units: { subject, chapter_no, chapter_title, section_no, section_title, memo }
+// UNIQUE(subject, chapter_no, section_no)

@@ -1,56 +1,104 @@
 window.Schema = (function () {
   const DB_COLUMNS = Object.freeze({
     groups: {
-      name:         "TEXT DEFAULT ''",
-      subject:      "TEXT DEFAULT ''",
-      teacher:      "TEXT DEFAULT ''",
-      sub_teacher:  "TEXT DEFAULT ''",
-      sub_subject:  "TEXT DEFAULT ''",
+      name: "TEXT NOT NULL",
     },
-    history: {
-      table_name: "TEXT",
-      row_id:     "INTEGER",
-      field:      "TEXT",
-      old_value:  "TEXT",
-      new_value:  "TEXT",
-      changed_at: "TEXT",
+
+    teachers: {
+      name: "TEXT NOT NULL",
+      memo: "TEXT DEFAULT ''",
     },
-    group_schedules: {
-      group_id:   "INTEGER NOT NULL",
-      day:        "INTEGER DEFAULT 1 /* 0: 일 ~ 6: 토 */",
-      start_time: "TEXT DEFAULT '13:00'",
-      end_time:   "TEXT DEFAULT '23:00'"
+
+    group_teachers: {
+      group_id: "INTEGER NOT NULL",
+      teacher_id: "INTEGER NOT NULL",
+      role: "TEXT NOT NULL", // 담임, 부담임
+      memo: "TEXT DEFAULT ''",
     },
+
+    schedules: {
+      group_id: "INTEGER NOT NULL",
+      teacher_id: "INTEGER NOT NULL",
+      day: "INTEGER NOT NULL", // 0=일 ~ 6=토
+      start_time: "TEXT NOT NULL", // HH:MM
+      end_time: "TEXT NOT NULL", // HH:MM
+    },
+
     students: {
-      group_id:     "INTEGER",
-      name:         "TEXT",
-      school:       "TEXT",
-      year:         "INTEGER",
-      phone:        "TEXT",
-      parent:       "TEXT",
-      parent_phone: "TEXT",
-      memo:         "TEXT",
+      name: "TEXT NOT NULL",
+      school: "TEXT DEFAULT ''",
+      grade: "TEXT DEFAULT ''",
+      phone: "TEXT DEFAULT ''", // 010-0000-0000
+      parent: "TEXT DEFAULT ''",
+      parent_phone: "TEXT DEFAULT ''", // 010-0000-0000
+      memo: "TEXT DEFAULT ''",
     },
+
+    group_students: {
+      group_id: "INTEGER NOT NULL",
+      student_id: "INTEGER NOT NULL",
+    },
+
+    change_logs: {
+      table_name: "TEXT NOT NULL", // groups, teachers, group_teachers, schedules, students, group_students
+      record_id: "INTEGER NOT NULL",
+      action: "TEXT NOT NULL", // INSERT, UPDATE, DELETE
+      changed_fields: "TEXT", // JSON string ["name", "school"]
+      before_value: "TEXT",   // JSON string {name: "철수", school: "ㅁㅁ중"}
+      after_value: "TEXT",    // JSON string {name: "영희", school: "ㅇㅇ중"}
+      changed_at: "DATETIME DEFAULT CURRENT_TIMESTAMP", // YYYY-MM-DD HH:MM:SS (string 타입 in JS)
+    },
+
+    attendance_records: {
+      date: "DATE NOT NULL", // YYYY-MM-DD
+      student_id: "INTEGER NOT NULL",
+      status: "TEXT NOT NULL", // 출석, 지각, 결석
+      memo: "TEXT DEFAULT ''",
+    },
+
     plans: {
-      group_id: "INTEGER",
-      date:     "TEXT",
-      lesson:   "TEXT",
-      homework: "TEXT",
-      exam:     "TEXT",
-      notice:   "TEXT",
-      memo:     "TEXT",
+      group_id: "INTEGER NOT NULL",
+      date: "DATE NOT NULL", // YYYY-MM-DD
+      memo: "TEXT DEFAULT ''",
+      lesson: "TEXT DEFAULT ''",
+      homework: "TEXT DEFAULT ''",
+      exam_id: "INTEGER",
     },
-    scores: {
-      plan_id:        "INTEGER",
-      student_id:     "INTEGER",
-      homework_score: "TEXT",
-      exam_score:     "INTEGER",
+
+    plan_overrides: {
+      plan_id: "INTEGER NOT NULL",
+      student_id: "INTEGER NOT NULL",
+      lesson: "TEXT DEFAULT ''",
+      homework: "TEXT DEFAULT ''",
+      __unique: "UNIQUE(plan_id, student_id)",
     },
-    consults: {
-      date:       "TEXT",
-      student_id: "INTEGER",
-      content:    "TEXT",
+
+    exams: {
+      title: "TEXT NOT NULL", // 시험지 이름
+      unit: "TEXT", // 과목, 단원
+      difficulty: "TEXT",
+      question_number: "INTEGER", // 문제 개수
+      full_score: "INTEGER", // 만점 몇 점인지
+      memo: "TEXT DEFAULT ''",
     },
+
+    exam_scores: {
+      exam_id: "INTEGER NOT NULL",
+      student_id: "INTEGER NOT NULL",
+      date: "DATE",
+      score: "INTEGER",
+      memo: "TEXT DEFAULT ''",
+    },
+
+    math_units: {
+      subject: "TEXT NOT NULL",
+      chapter_no: "INTEGER NOT NULL",
+      chapter_title: "TEXT NOT NULL",
+      section_no: "INTEGER NOT NULL",
+      section_title: "TEXT NOT NULL",
+      memo: "TEXT DEFAULT ''",
+      __unique: "UNIQUE(subject, chapter_no, section_no)",
+    }
   });
 
   /**
@@ -60,54 +108,43 @@ window.Schema = (function () {
    */
   function initDB(db) {
     console.log("Schema.initDB");
-
-    // debugRecreateTables(db);
-
-    db.run(createSqlFromColumns("groups"));
-    db.run(createSqlFromColumns("group_schedules"));
-    db.run(createSqlFromColumns("students"));
-    db.run(createSqlFromColumns("plans"));
-    db.run(createSqlFromColumns("scores"));
-    db.run(createSqlFromColumns("consults"));
-    db.run(createSqlFromColumns("history"));
-  }
-
-  // 이전 버전의 DB를 가져올 때 db 수정을 해야 함
-  function debugRecreateTables(db) {
-    console.log("debugRecreateTables: 이전 버전의 데이터이므로 DB 전반적으로 수정합니다.");
-    deleteTable(db, "messages");
-    changeTableName(db, "group_history", "history");
-    changeColumnName(db, "history", "group_id", "row_id");
-    addColumn(db, "history", "table_name", "TEXT", "group");
-    recreateTable(db, "history");
-    recreateTable(db, "group_schedules");
+    Object.keys(DB_COLUMNS).forEach(tableName => db.run(createTableSQL(tableName)));
   }
 
   /**
-   * tableName 이름의 DB가 존재하지 않는다면
-   * columns 객체에 맞게 생성한다.
+   * tableName 이름의 DB Table 생성.
+   * @param {string} tableName DB_COLUMNS 키값에 있는 이름이어야 함
    */
-  function createSqlFromColumns(tableName, _columns = undefined) {
+  function createTableSQL(tableName, _columns = undefined) {
     let columns = _columns;
     if (columns == undefined) {
       columns = DB_COLUMNS[tableName];
       if (columns == undefined) return;
     }
-
-    const columnDefs = [];
-
-    // 기본 PK
-    columnDefs.push("id INTEGER PRIMARY KEY AUTOINCREMENT");
-
-    for (const [name, type] of Object.entries(columns)) {
-      columnDefs.push(`${name} ${type}`);
-    }
     
+    const defs = [
+      "id INTEGER PRIMARY KEY AUTOINCREMENT", // 기본 PK
+      "created_at DATETIME DEFAULT CURRENT_TIMESTAMP",
+      "updated_at DATETIME DEFAULT CURRENT_TIMESTAMP",
+    ];
+
+    for (const [col, def] of Object.entries(columns)) {
+      if (!col.startsWith("__")) {
+        defs.push(`${col} ${def}`);
+      }
+    }
+
+    if (columns.__unique) {
+      defs.push(columns.__unique);
+    }
+
     return `
       CREATE TABLE IF NOT EXISTS ${tableName} (
-      ${columnDefs.join(",\n")}
-    )`;
+        ${defs.join(",\n")}
+      );
+    `;
   }
+
 
   /************************/
   /*** TABLE SCHEMA 수정 ***/
@@ -123,7 +160,7 @@ window.Schema = (function () {
     const columnsStr = Object.keys(DB_COLUMNS[tableName]).join(", ");
     console.log(columnsStr);
     
-    db.run(createSqlFromColumns(`${tableName}_new`, DB_COLUMNS[tableName]));
+    db.run(createTableSQL(`${tableName}_new`, DB_COLUMNS[tableName]));
     db.run(`
       INSERT INTO ${tableName}_new (id, ${columnsStr})
       SELECT id, ${columnsStr}
