@@ -1,4 +1,13 @@
-window.Schema = (function () {
+/**
+ * schema.js
+ * 
+ * DB_COLUMNS
+ * 테이블 생성 SQL
+ * UNIQUE, INDEX 관리
+ * 실제 db 실행은 X
+ */
+
+(function (App) {
   const DB_COLUMNS = Object.freeze({
     groups: {
       name: "TEXT NOT NULL",
@@ -39,14 +48,13 @@ window.Schema = (function () {
       student_id: "INTEGER NOT NULL",
     },
 
-    change_logs: {
+    update_logs: {
       table_name: "TEXT NOT NULL", // groups, teachers, group_teachers, schedules, students, group_students
       record_id: "INTEGER NOT NULL",
       action: "TEXT NOT NULL", // INSERT, UPDATE, DELETE
       changed_fields: "TEXT", // JSON string ["name", "school"]
       before_value: "TEXT",   // JSON string {name: "철수", school: "ㅁㅁ중"}
       after_value: "TEXT",    // JSON string {name: "영희", school: "ㅇㅇ중"}
-      changed_at: "DATETIME DEFAULT CURRENT_TIMESTAMP", // YYYY-MM-DD HH:MM:SS (string 타입 in JS)
     },
 
     attendance_records: {
@@ -102,25 +110,10 @@ window.Schema = (function () {
   });
 
   /**
-   * DB_COLUMNS에 적힌 스키마를 바탕으로
-   * 기본 테이블들을 생성한다.
-   * @param {*} db 
-   */
-  function initDB(db) {
-    console.log("Schema.initDB");
-    Object.keys(DB_COLUMNS).forEach(tableName => db.run(createTableSQL(tableName)));
-  }
-
-  /**
    * tableName 이름의 DB Table 생성.
-   * @param {string} tableName DB_COLUMNS 키값에 있는 이름이어야 함
    */
-  function createTableSQL(tableName, _columns = undefined) {
-    let columns = _columns;
-    if (columns == undefined) {
-      columns = DB_COLUMNS[tableName];
-      if (columns == undefined) return;
-    }
+  function createTableSQL(tableName, columns) {
+    if (columns == undefined) return;
     
     const defs = [
       "id INTEGER PRIMARY KEY AUTOINCREMENT", // 기본 PK
@@ -145,88 +138,15 @@ window.Schema = (function () {
     `;
   }
 
-
-  /************************/
-  /*** TABLE SCHEMA 수정 ***/
-  /************************/
-  
-  /**
-   * 테이블을 재생성한 후 데이터를 복사한다.
-   * 컬럼 순서를 재정렬하고 싶을 때 사용.
-   * @param {*} db 
-   * @param {string} tableName 
-   */
-  function recreateTable(db, tableName) {
-    const columnsStr = Object.keys(DB_COLUMNS[tableName]).join(", ");
-    console.log(columnsStr);
-    
-    db.run(createTableSQL(`${tableName}_new`, DB_COLUMNS[tableName]));
-    db.run(`
-      INSERT INTO ${tableName}_new (id, ${columnsStr})
-      SELECT id, ${columnsStr}
-      FROM ${tableName};
-    `);
-    deleteTable(db, tableName);
-    changeTableName(db, `${tableName}_new`, tableName);
+  function getAllCreateTableSQL() {
+    return Object.entries(DB_COLUMNS).map(
+      ([table, cols]) => createTableSQL(table, cols)
+    );
   }
 
-  /**
-   * 새로운 컬럼을 추가한다.
-   * @param {*} db 
-   * @param {*} tableName 
-   * @param {*} columnName 
-   * @param {*} dataType 
-   * @param {*} defaultVal 
-   */
-  function addColumn(db, tableName, columnName, dataType, defaultVal = null) {
-    db.run(`
-      ALTER TABLE ${tableName}
-      ADD COLUMN ${columnName} ${dataType};
-    `);
-
-    if (defaultVal) {
-      db.run(`
-        UPDATE ${tableName}
-        SET ${columnName} = ?
-        WHERE ${columnName} IS NULL;
-      `, [defaultVal]);
-    }
-  }
-
-  /**
-   * 테이블 이름을 변경한다.
-   * @param {*} db 
-   * @param {*} tableName 
-   * @param {*} newName 
-   */
-  function changeTableName(db, tableName, newName) {
-    db.run(`ALTER TABLE ${tableName} RENAME TO ${newName}`);
-  }
-
-  /**
-   * 컬럼 이름을 변경한다.
-   * @param {*} db 
-   * @param {*} tableName 
-   * @param {*} columnName 
-   * @param {*} newName 
-   */
-  function changeColumnName(db, tableName, columnName, newName) {
-    db.run(`
-      ALTER TABLE ${tableName}
-      RENAME COLUMN ${columnName} TO ${newName}
-    `);
-  }
-
-  /**
-   * 테이블을 삭제한다.
-   * @param {string} tableName 
-   */
-  function deleteTable(db, tableName) {
-    db.run(`DROP TABLE ${tableName}`);
-  }
-
-  return {
+  App.db.schema = {
     DB_COLUMNS,
-    initDB,
+    createTableSQL,
+    getAllCreateTableSQL,
   };
-})();
+})(window.App);

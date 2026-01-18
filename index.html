@@ -10,10 +10,14 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
+  <!-- HTML -->
   <div class="body-container">
     <!-- 좌측: 반 목록 -->
     <aside class="sidebar">
       <div id="sidebarLogo" class="sidebar-logo">함수쌤클라쓰</div>
+      <div class="teacher-selector">
+        <select id="teacherSelect"></select> 강사
+      </div>
       <div class="sidebar-container">
         <div class="sidebar-list">
           <div class="sidebar-block" onclick="openMenu('timetable')">시간표</div>
@@ -33,10 +37,10 @@
       <div class="sidebar-container">
         <div class="sidebar-header">데이터베이스</div>
         <div class="sidebar-list">
-          <div class="sidebar-block" onclick="openMenu('db')">DB 전체 보기</div>
-          <div class="sidebar-block" onclick="DB.backupDB()">DB 저장하기</div>
-          <div class="sidebar-block" onclick="DB.restoreDB()">DB 불러오기</div>
-          <div class="sidebar-block" onclick="createNewDB()">DB 초기화</div>
+          <div class="sidebar-block" onclick="App.ui.navigation.openMenu('db')">DB 전체 보기</div>
+          <div class="sidebar-block" onclick="App.db.backupDB()">DB 저장하기</div>
+          <div class="sidebar-block" onclick="App.db.restoreDB()">DB 불러오기</div>
+          <div class="sidebar-block" onclick="App.db.createNewDB()">DB 초기화</div>
         </div>
       </div>
     </aside>
@@ -52,7 +56,7 @@
       </div>
       <!-- 두번째 바 -->
       <div id="localbar" class="localbar">
-        <!-- <div class="localbar-tab" onclick="openTab(###)">###</div> -->
+        <!-- <div class="localbar-tab" onclick="openGroupTab(###)">###</div> -->
       </div>
       <!-- 메인 화면 -->
       <div class="scroll-wrap no-scrollbar">
@@ -61,16 +65,52 @@
     </main>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
-  <script src="js/db/types.js"></script>
-  <script src="js/init.js"></script>
-  <script src="js/editor.js"></script>
-  <script src="js/strings.js"></script>
+  <!-- 0. SQL -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>  
+
+  <!-- 1. App 네임스페이스 -->
+  <script src="js/app.js"></script>
+
+  <!-- 2. utils -->
+  <script src="js/utils/date.js"></script>
+  <script src="js/utils/constants.js"></script>
+  <script src="js/utils/logger.js"></script>
+
+  <!-- 3. state -->
+  <script src="js/state/appState.js"></script>
+
+  <!-- 4. db -->
   <script src="js/db/schema.js"></script>
   <script src="js/db/db.js"></script>
-  <script src="js/ui/sidebarUI.js"></script>
+
+  <!-- 5. repositories -->
+  <!-- <script src="js/repositories/groupRepo.js"></script>
+  <script src="js/repositories/teacherRepo.js"></script>
+  <script src="js/repositories/studentRepo.js"></script>
+  <script src="js/repositories/scheduleRepo.js"></script>
+  <script src="js/repositories/planRepo.js"></script>
+  <script src="js/repositories/examRepo.js"></script>
+  <script src="js/repositories/attendanceRepo.js"></script> -->
+
+  <!-- 6. services -->
+  <!-- <script src="js/services/groupService.js"></script>
+  <script src="js/services/planService.js"></script>
+  <script src="js/services/examService.js"></script>
+  <script src="js/services/changeLogService.js"></script> -->
+
+  <!-- 7. ui -->
+  <script src="js/ui/tableEditor.js"></script>
+  <script src="js/ui/sidebar.js"></script>
+  <!-- <script src="js/ui/events.js"></script>
   <script src="js/ui/groupUI.js"></script>
+  <script src="js/ui/scheduleUI.js"></script>
   <script src="js/ui/planUI.js"></script>
-  <script src="js/app.js"></script>
+  <script src="js/ui/examUI.js"></script>
+  <script src="js/ui/attendanceUI.js"></script> -->
+
+  <!-- 8. entry -->
+  <script src="js/main.js"></script>
+
+
 </body>
 </html>

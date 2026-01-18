@@ -1,0 +1,39 @@
+/js
+ ├─ app.js (네임스페이스 루트. 가장 먼저 로드)
+ ├─ main.js (DOM 로딩 후 UI 초기화)
+ │
+ ├─ utils/ (순수 헬퍼 함수들)
+ │   ├─ dom.js
+ │   ├─ date.js
+ │   └─ constants.js
+ │
+ ├─ state/
+ │   └─ appState.js
+ │
+ ├─ db/
+ │   ├─ db.js
+ │   └─ schema.js
+ │
+ ├─ repositories/
+ │   ├─ groupRepo.js
+ │   ├─ teacherRepo.js
+ │   ├─ studentRepo.js
+ │   ├─ scheduleRepo.js
+ │   ├─ planRepo.js
+ │   ├─ examRepo.js
+ │   └─ attendanceRepo.js
+ │
+ ├─ services/
+ │   ├─ groupService.js
+ │   ├─ planService.js
+ │   ├─ examService.js
+ │   └─ changeLogService.js
+ │
+ └─ ui/
+     ├─ tableBinder.js
+     ├─ events.js
+     ├─ groupUI.js
+     ├─ scheduleUI.js
+     ├─ planUI.js
+     ├─ examUI.js
+     └─ attendanceUI.js
