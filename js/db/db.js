@@ -57,6 +57,8 @@
     console.log(App.db.schema);
     const tableSQLs = App.db.schema.getAllCreateTableSQL();
     tableSQLs.forEach(sql => db.run(sql));
+    App.utils.logger.info("createNewDB: seed 데이터 넣기");
+    seed();
     saveDB();
   }
 
@@ -76,7 +78,7 @@
     const date = dateArr.slice(0,3).join('');
     const time = dateArr.slice(3).join('');
     a.href = url;
-    a.download = `${STRINGS.backup_filename}_${date}-${time}.sqlite`;
+    a.download = `${App.utils.constants.BACKUP_FILENAME}_${date}-${time}.sqlite`;
 
     document.body.appendChild(a);
     a.click();
@@ -88,7 +90,7 @@
    * 파일을 불러와 읽고 DB를 local storage에 저장한다.
    */
   function restoreDB() {
-    if (!confirm(STRINGS.db.confirmRestore)) return;
+    if (!confirm(App.utils.constants.DB_MESSAGE.confirmRestore)) return;
 
     // input 객체 만들고 파일 불러오면 db에 저장하기
     const fileInput = document.createElement("input");
@@ -104,7 +106,7 @@
         db = new SQL.Database(buffer);
         saveDB(); // localStorage에 저장
 
-        alert(STRINGS.db.successRestore);
+        alert(App.utils.constants.DB_MESSAGE.successRestore);
         location.reload(); // 화면 갱신
       };
       reader.readAsArrayBuffer(file);
@@ -235,14 +237,9 @@
     return resultToObjects(row[0])[0];
   }
 
-  function insertRow(tablename, data) {
-    const columnsStr = Object.keys(data).join(", ");
-    const valuesStr = Object.values(data).map(val => `"${val}"`).join(", ");
-    
-    db.run(`
-      INSERT INTO ${tablename} (${columnsStr})
-      VALUES (${valuesStr});
-    `);
+  function formatFieldWithAlias(fieldStr) {
+    const fields = fieldStr.replace(/\s/g,"").split(',');
+    return fields.map(f => `${f} AS ${App.utils.constants.FIELD_ALIAS[f]}`).join(',\n  ');
   }
 
   // #endregion
@@ -253,99 +250,123 @@
 
   function seed() {
     console.log("🌱 seed data inserting...");
-
-    const sqls = [
-      `INSERT INTO groups (id, created_at, name) VALUES ('1', '2025-11-03 00:00:00', '9E1');`, 
-`INSERT INTO groups (id, created_at, name) VALUES ('2', '2025-11-03 00:00:00', '8E1');`, 
-`INSERT INTO groups (id, created_at, name) VALUES ('3', '2025-11-03 00:00:00', '8S');`, 
-`INSERT INTO groups (id, created_at, name) VALUES ('4', '2025-12-05 00:00:00', '7M1');`, 
-`INSERT INTO groups (id, created_at, name) VALUES ('5', '2026-01-02 00:00:00', '경시대회');`, 
-`INSERT INTO groups (id, created_at, name) VALUES ('6', '2026-01-05 00:00:00', '9M2');`, 
-`INSERT INTO groups (id, created_at, name) VALUES ('7', '2026-01-15 00:00:00', '9M3');`, 
-`INSERT INTO teachers (id, created_at, name) VALUES ('1', '2025-11-03 00:00:00', '함창수');`, 
-`INSERT INTO teachers (id, created_at, name, memo) VALUES ('2', '2025-11-03 00:00:00', '김지영', '중등부 팀장');`, 
-`INSERT INTO teachers (id, created_at, name) VALUES ('3', '2025-11-03 00:00:00', '정원재');`, 
-`INSERT INTO teachers (id, created_at, name) VALUES ('4', '2025-11-03 00:00:00', '김도영');`, 
-`INSERT INTO teachers (id, created_at, name, memo) VALUES ('5', '2025-11-03 00:00:00', '박범영', '팀장');`, 
-`INSERT INTO group_teachers (id, created_at, group_id, teacher_id, role, memo) VALUES ('1', '2025-11-03 00:00:00', '1', '1', '담임', '미적분1 기본');`, 
-`INSERT INTO group_teachers (id, created_at, group_id, teacher_id, role, memo) VALUES ('2', '2025-11-03 00:00:00', '1', '4', '부담임', '대수 심화');`, 
-`INSERT INTO group_teachers (id, created_at, group_id, teacher_id, role, memo) VALUES ('3', '2025-11-03 00:00:00', '2', '1', '담임', '공통수학1 심화');`, 
-`INSERT INTO group_teachers (id, created_at, group_id, teacher_id, role, memo) VALUES ('4', '2025-11-03 00:00:00', '2', '3', '부담임', '공통수학2 기본');`, 
-`INSERT INTO group_teachers (id, created_at, group_id, teacher_id, role, memo) VALUES ('5', '2025-11-03 00:00:00', '3', '2', '담임', '미적분1 기본');`, 
-`INSERT INTO group_teachers (id, created_at, group_id, teacher_id, role, memo) VALUES ('6', '2025-11-03 00:00:00', '3', '1', '부담임', '대수 심화');`, 
-`INSERT INTO group_teachers (id, created_at, group_id, teacher_id, role, memo) VALUES ('7', '2025-12-05 00:00:00', '4', '2', '담임', '중2-1 기본');`, 
-`INSERT INTO group_teachers (id, created_at, group_id, teacher_id, role, memo) VALUES ('8', '2025-12-05 00:00:00', '4', '1', '부담임', '중1-2 심화');`, 
-`INSERT INTO group_teachers (id, created_at, group_id, teacher_id, role, memo) VALUES ('9', '2026-01-02 00:00:00', '5', '5', '담임', '경시 - 대수 관련');`, 
-`INSERT INTO group_teachers (id, created_at, group_id, teacher_id, role, memo) VALUES ('10', '2026-01-02 00:00:00', '5', '1', '부담임', '경시 - 기하 관련');`, 
-`INSERT INTO group_teachers (id, created_at, group_id, teacher_id, role, memo) VALUES ('11', '2026-01-05 00:00:00', '6', '2', '담임', '공통수학2 기본');`, 
-`INSERT INTO group_teachers (id, created_at, group_id, teacher_id, role, memo) VALUES ('12', '2026-01-05 00:00:00', '6', '1', '부담임', '공통수학1 심화');`, 
-`INSERT INTO group_teachers (id, created_at, group_id, teacher_id, role, memo) VALUES ('13', '2026-01-15 00:00:00', '7', '1', '담임', '중3-1 기본');`, 
-`INSERT INTO group_teachers (id, created_at, group_id, teacher_id, role, memo) VALUES ('14', '2026-01-15 00:00:00', '7', '3', '부담임', '중3-1 기본 보조');`, 
-`INSERT INTO schedules (id, created_at, group_id, teacher_id, day, start_time, end_time) VALUES ('1', '2025-11-03 00:00:00', '1', '1', '1', '17:20', '20:00');`, 
-`INSERT INTO schedules (id, created_at, group_id, teacher_id, day, start_time, end_time) VALUES ('2', '2025-11-03 00:00:00', '1', '1', '3', '17:20', '20:00');`, 
-`INSERT INTO schedules (id, created_at, group_id, teacher_id, day, start_time, end_time) VALUES ('3', '2025-11-03 00:00:00', '2', '1', '2', '17:20', '20:00');`, 
-`INSERT INTO schedules (id, created_at, group_id, teacher_id, day, start_time, end_time) VALUES ('4', '2025-11-03 00:00:00', '2', '1', '4', '17:20', '20:00');`, 
-`INSERT INTO schedules (id, created_at, group_id, teacher_id, day, start_time, end_time) VALUES ('5', '2025-11-03 00:00:00', '3', '1', '5', '20:10', '22:50');`, 
-`INSERT INTO schedules (id, created_at, group_id, teacher_id, day, start_time, end_time) VALUES ('6', '2025-12-05 00:00:00', '4', '1', '5', '17:20', '20:00');`, 
-`INSERT INTO schedules (id, created_at, group_id, teacher_id, day, start_time, end_time) VALUES ('7', '2026-01-02 00:00:00', '5', '1', '1', '20:10', '22:50');`, 
-`INSERT INTO schedules (id, created_at, group_id, teacher_id, day, start_time, end_time) VALUES ('8', '2026-01-05 00:00:00', '6', '1', '3', '20:10', '22:50');`, 
-`INSERT INTO schedules (id, created_at, group_id, teacher_id, day, start_time, end_time) VALUES ('9', '2026-01-15 00:00:00', '7', '1', '2', '20:10', '22:50');`, 
-`INSERT INTO schedules (id, created_at, group_id, teacher_id, day, start_time, end_time) VALUES ('10', '2026-01-15 00:00:00', '7', '1', '4', '20:10', '22:50');`, 
-`INSERT INTO students (id, created_at, name, school, grade, phone, parent) VALUES ('1', '2025-11-03 00:00:00', '정지영', '문정중', '중3', '010-2132-8061', '모');`, 
-`INSERT INTO students (id, created_at, name, school, grade, parent, parent_phone) VALUES ('2', '2025-11-03 00:00:00', '이형건', '문정중', '중3', '모', '010-5126-7385');`, 
-`INSERT INTO students (id, created_at, name, school, grade, parent, memo) VALUES ('3', '2025-11-03 00:00:00', '조안', '글꽃중', '중3', '모', '25/12/01~12 내신대비(22일 복귀)');`, 
-`INSERT INTO students (id, created_at, name, school, grade, parent) VALUES ('4', '2025-11-03 00:00:00', '엄태이', '가양중', '중3', '모');`, 
-`INSERT INTO students (id, created_at, name, school, grade, parent, parent_phone) VALUES ('5', '2025-11-03 00:00:00', '허지성', '삼천중', '중3', '모', '010-3674-4747');`, 
-`INSERT INTO students (id, created_at, name, school, grade, phone, parent, parent_phone, memo) VALUES ('6', '2025-12-22 00:00:00', '도하빈', '보문중', '중3', '010-5641-6870', '부', '010-2403-8807(부)', '화목 영어학원 \n25/12/29~31 기말고사');`, 
-`INSERT INTO students (id, created_at, name, school, grade, parent, parent_phone) VALUES ('7', '2025-11-03 00:00:00', '김소연', '둔산중', '중2', '모', '010-4440-9436');`, 
-`INSERT INTO students (id, created_at, name, school, grade, parent, parent_phone) VALUES ('8', '2025-11-03 00:00:00', '서혜원', '전민중', '중2', '모', '010-7277-3532');`, 
-`INSERT INTO students (id, created_at, name, school, grade, parent, parent_phone) VALUES ('9', '2025-11-03 00:00:00', '신유림', '삼천중', '중2', '모', '010-5004-1543');`, 
-`INSERT INTO students (id, created_at, name, school, grade, parent, parent_phone) VALUES ('10', '2025-11-03 00:00:00', '이서윤', '문정중', '중2', '모', '010-9990-8965');`, 
-`INSERT INTO students (id, created_at, name, school, grade, parent, parent_phone) VALUES ('11', '2025-11-03 00:00:00', '이시연', '문정중', '중2', '모', '010-7455-7997');`, 
-`INSERT INTO students (id, created_at, name, school, grade, parent, parent_phone) VALUES ('12', '2025-11-03 00:00:00', '임동현', '삼천중', '중2', '모', '010-9364-9296');`, 
-`INSERT INTO students (id, created_at, name, school, grade, parent, parent_phone) VALUES ('13', '2025-11-03 00:00:00', '장윤진', '삼천중', '중2', '모', '010-7997-8308');`, 
-`INSERT INTO students (id, created_at, name, school, grade, parent, parent_phone) VALUES ('14', '2025-11-03 00:00:00', '최인제', '버드내중', '중2', '모', '010-6664-8116');`, 
-`INSERT INTO students (id, created_at, name, school, grade, parent, parent_phone) VALUES ('15', '2026-01-06 00:00:00', '김한결', '탄방중', '중2', '모', '010-3471-3157');`, 
-`INSERT INTO students (id, created_at, name, school, grade) VALUES ('16', '2025-11-03 00:00:00', '조아라', '문정중', '중2');`, 
-`INSERT INTO students (id, created_at, name, school, grade) VALUES ('17', '2025-11-03 00:00:00', '김은승', '하기중', '중2');`, 
-`INSERT INTO students (id, created_at, name, school, grade) VALUES ('18', '2025-11-03 00:00:00', '박시우', '대덕중', '중2');`, 
-`INSERT INTO students (id, created_at, name, school, grade) VALUES ('19', '2025-12-05 00:00:00', '김지아', '갑천중', '중1');`, 
-`INSERT INTO students (id, created_at, name, school, grade, memo) VALUES ('20', '2025-12-05 00:00:00', '우주환', '갑천중', '중1', '집중력 낮고 수업 중 말 많음. 핸드폰 몰래 사용하는 경우가 있음. 숙제 안해놓고 해왔다고 하는 경우 있음. 성취도는 중상. \n필기가 잘 안보이고 잘 안 하기도 함. 필기 점검 필수.\n주의를 단호하지만 과히지 않게 주는 게 좋음. \n부모님 모두 경찰직으로 엄격. 가정과의 연결이 필요할 경우, 전화보다는 채널이나 문자가 빠른듯…? 경찰 부모님이라는 특성상 ‘논리적, 간결하게’ 정리해서 연락하길 추천드림');`, 
-`INSERT INTO students (id, created_at, name, school, grade, memo) VALUES ('21', '2025-12-05 00:00:00', '정승호', '삼천중', '중1', '조용. 자기 페이스 유지하는 스타일. 놀림 받아도 무던하게 넘김. 조용히 학습에 임하는 태도가 일관적. 과제 충실하게 해옴. 스스로 문제 해결했을 때 뿌듯. 계산실수 많음. 검산 습관 약한듯. 이해 여부가 잘 드러나지 않아 수업 중 확인 필수. 성취감 자주 느끼게 해주는 게 동기 유지에 중요한 타입.');`, 
-`INSERT INTO students (id, created_at, name, school, grade, memo) VALUES ('22', '2025-12-05 00:00:00', '조선우', '관저중', '중1', '차분한 편. 자기주도학습 가능한 학생. 수업시간 딴짓 안하고 문제풀이 묵묵히 집중. 성취도 반에서 가장 뛰어남. 완벽주의적 성향이 있는 것 같음.\n어머니가 매우 꼼꼼히 학습 챙기심.\n중학 진학 후 내신 성적에 대한 불안이 높음(부모,학생 모두). 진학형 피드백을 적극적으로 주는 것이 매우 중요. 어머니께는 중등 내신 관리 시스템이 있다는 점을 구체적으로 안내해드리는 것이 신뢰 확보에 도움이 됨\n정서적 안정감 유지 필요. 긍정적 피드백 꾸준히 제공.');`, 
-`INSERT INTO students (id, created_at, name, grade) VALUES ('23', '2026-01-16 00:00:00', '김규현', '중1');`, 
-`INSERT INTO students (id, created_at, name, grade) VALUES ('24', '2026-01-16 00:00:00', '서지현', '중1');`, 
-`INSERT INTO group_students (id, created_at, group_id, student_id) VALUES ('1', '2025-11-03 00:00:00', '1', '1');`, 
-`INSERT INTO group_students (id, created_at, group_id, student_id) VALUES ('2', '2025-11-03 00:00:00', '1', '2');`, 
-`INSERT INTO group_students (id, created_at, group_id, student_id) VALUES ('3', '2025-11-03 00:00:00', '1', '3');`, 
-`INSERT INTO group_students (id, created_at, group_id, student_id) VALUES ('4', '2025-11-03 00:00:00', '1', '4');`, 
-`INSERT INTO group_students (id, created_at, group_id, student_id) VALUES ('5', '2025-11-03 00:00:00', '1', '5');`, 
-`INSERT INTO group_students (id, created_at, group_id, student_id) VALUES ('6', '2025-12-22 00:00:00', '1', '6');`, 
-`INSERT INTO group_students (id, created_at, group_id, student_id) VALUES ('7', '2025-11-03 00:00:00', '2', '7');`, 
-`INSERT INTO group_students (id, created_at, group_id, student_id) VALUES ('8', '2025-11-03 00:00:00', '2', '8');`, 
-`INSERT INTO group_students (id, created_at, group_id, student_id) VALUES ('9', '2025-11-03 00:00:00', '2', '9');`, 
-`INSERT INTO group_students (id, created_at, group_id, student_id) VALUES ('10', '2025-11-03 00:00:00', '2', '10');`, 
-`INSERT INTO group_students (id, created_at, group_id, student_id) VALUES ('11', '2025-11-03 00:00:00', '2', '11');`, 
-`INSERT INTO group_students (id, created_at, group_id, student_id) VALUES ('12', '2025-11-03 00:00:00', '2', '12');`, 
-`INSERT INTO group_students (id, created_at, group_id, student_id) VALUES ('13', '2025-11-03 00:00:00', '2', '13');`, 
-`INSERT INTO group_students (id, created_at, group_id, student_id) VALUES ('14', '2025-11-03 00:00:00', '2', '14');`, 
-`INSERT INTO group_students (id, created_at, group_id, student_id) VALUES ('15', '2026-01-06 00:00:00', '2', '15');`, 
-`INSERT INTO group_students (id, created_at, group_id, student_id) VALUES ('16', '2025-11-03 00:00:00', '3', '16');`, 
-`INSERT INTO group_students (id, created_at, group_id, student_id) VALUES ('17', '2025-11-03 00:00:00', '3', '17');`, 
-`INSERT INTO group_students (id, created_at, group_id, student_id) VALUES ('18', '2025-11-03 00:00:00', '3', '18');`, 
-`INSERT INTO group_students (id, created_at, group_id, student_id) VALUES ('19', '2025-12-05 00:00:00', '4', '19');`, 
-`INSERT INTO group_students (id, created_at, group_id, student_id) VALUES ('20', '2025-12-05 00:00:00', '4', '20');`, 
-`INSERT INTO group_students (id, created_at, group_id, student_id) VALUES ('21', '2025-12-05 00:00:00', '4', '21');`, 
-`INSERT INTO group_students (id, created_at, group_id, student_id) VALUES ('22', '2025-12-05 00:00:00', '4', '22');`, 
-`INSERT INTO group_students (id, created_at, group_id, student_id) VALUES ('23', '2026-01-16 00:00:00', '4', '23');`, 
-`INSERT INTO group_students (id, created_at, group_id, student_id) VALUES ('24', '2026-01-16 00:00:00', '4', '24');`
-    ];
-
-    sqls.forEach(sql => db.run(sql));
+    insert("groups", "id, created_at, name", "'1', '2025-11-03 00:00:00', '9E1'");
+    insert("groups", "id, created_at, name", "'2', '2025-11-03 00:00:00', '8E1'");
+    insert("groups", "id, created_at, name", "'3', '2025-11-03 00:00:00', '8S'");
+    insert("groups", "id, created_at, name", "'4', '2025-12-05 00:00:00', '7M1'");
+    insert("groups", "id, created_at, name", "'5', '2026-01-02 00:00:00', '경시대회'");
+    insert("groups", "id, created_at, name", "'6', '2026-01-05 00:00:00', '9M2'");
+    insert("groups", "id, created_at, name", "'7', '2026-01-15 00:00:00', '9M3'");
+    insert("teachers", "id, created_at, name, gender, state", "'1', '2025-11-03 00:00:00', '함창수', '남', '재직'");
+    insert("teachers", "id, created_at, name, gender, state, memo", "'2', '2025-11-03 00:00:00', '김지영', '여', '재직', '중등부 팀장'");
+    insert("teachers", "id, created_at, name, gender, state", "'3', '2025-11-03 00:00:00', '정원재', '남', '재직'");
+    insert("teachers", "id, created_at, name, gender, state", "'4', '2025-11-03 00:00:00', '김도영', '여', '재직'");
+    insert("teachers", "id, created_at, name, gender, state, memo", "'5', '2025-11-03 00:00:00', '박범영', '남', '재직', '팀장'");
+    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'1', '2025-11-03 00:00:00', '1', '1', '담임', '미적분1 기본'");
+    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'2', '2025-11-03 00:00:00', '1', '4', '부담임', '대수 심화'");
+    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'3', '2025-11-03 00:00:00', '2', '1', '담임', '공통수학1 심화'");
+    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'4', '2025-11-03 00:00:00', '2', '3', '부담임', '공통수학2 기본'");
+    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'5', '2025-11-03 00:00:00', '3', '2', '담임', '미적분1 기본'");
+    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'6', '2025-11-03 00:00:00', '3', '1', '부담임', '대수 심화'");
+    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'7', '2025-12-05 00:00:00', '4', '2', '담임', '중2-1 기본'");
+    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'8', '2025-12-05 00:00:00', '4', '1', '부담임', '중1-2 심화'");
+    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'9', '2026-01-02 00:00:00', '5', '5', '담임', '경시 - 대수 관련'");
+    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'10', '2026-01-02 00:00:00', '5', '1', '부담임', '경시 - 기하 관련'");
+    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'11', '2026-01-05 00:00:00', '6', '2', '담임', '공통수학2 기본'");
+    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'12', '2026-01-05 00:00:00', '6', '1', '부담임', '공통수학1 심화'");
+    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'13', '2026-01-15 00:00:00', '7', '1', '담임', '중3-1 기본'");
+    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'14', '2026-01-15 00:00:00', '7', '3', '부담임', '중3-1 기본 보조'");
+    insert("schedules", "id, created_at, group_id, teacher_id, day, start_time, end_time", "'1', '2025-11-03 00:00:00', '1', '1', '1', '17:20', '20:00'");
+    insert("schedules", "id, created_at, group_id, teacher_id, day, start_time, end_time", "'2', '2025-11-03 00:00:00', '1', '1', '3', '17:20', '20:00'");
+    insert("schedules", "id, created_at, group_id, teacher_id, day, start_time, end_time", "'3', '2025-11-03 00:00:00', '2', '1', '2', '17:20', '20:00'");
+    insert("schedules", "id, created_at, group_id, teacher_id, day, start_time, end_time", "'4', '2025-11-03 00:00:00', '2', '1', '4', '17:20', '20:00'");
+    insert("schedules", "id, created_at, group_id, teacher_id, day, start_time, end_time", "'5', '2025-11-03 00:00:00', '3', '1', '5', '20:10', '22:50'");
+    insert("schedules", "id, created_at, group_id, teacher_id, day, start_time, end_time", "'6', '2025-12-05 00:00:00', '4', '1', '5', '17:20', '20:00'");
+    insert("schedules", "id, created_at, group_id, teacher_id, day, start_time, end_time", "'7', '2026-01-02 00:00:00', '5', '1', '1', '20:10', '22:50'");
+    insert("schedules", "id, created_at, group_id, teacher_id, day, start_time, end_time", "'8', '2026-01-05 00:00:00', '6', '1', '3', '20:10', '22:50'");
+    insert("schedules", "id, created_at, group_id, teacher_id, day, start_time, end_time", "'9', '2026-01-15 00:00:00', '7', '1', '2', '20:10', '22:50'");
+    insert("schedules", "id, created_at, group_id, teacher_id, day, start_time, end_time", "'10', '2026-01-15 00:00:00', '7', '1', '4', '20:10', '22:50'");
+    insert("students", "id, created_at, name, gender, school, grade, phone, parent, state", "'1', '2025-11-03 00:00:00', '정지영', '남', '문정중', '중3', '010-2132-8061', '모', '재원'");
+    insert("students", "id, created_at, name, gender, school, grade, parent, parent_phone, state", "'2', '2025-11-03 00:00:00', '이형건', '남', '문정중', '중3', '모', '010-5126-7385', '재원'");
+    insert("students", "id, created_at, name, gender, school, grade, parent, state, memo", "'3', '2025-11-03 00:00:00', '조안', '남', '글꽃중', '중3', '모', '재원', '25/12/01~12 내신대비(22일 복귀)'");
+    insert("students", "id, created_at, name, gender, school, grade, parent, state", "'4', '2025-11-03 00:00:00', '엄태이', '남', '가양중', '중3', '모', '재원'");
+    insert("students", "id, created_at, name, gender, school, grade, parent, parent_phone, state", "'5', '2025-11-03 00:00:00', '허지성', '남', '삼천중', '중3', '모', '010-3674-4747', '재원'");
+    insert("students", "id, created_at, name, gender, school, grade, phone, parent, parent_phone, state, memo", "'6', '2025-12-22 00:00:00', '도하빈', '남', '보문중', '중3', '010-5641-6870', '부', '010-2403-8807(부)', '재원', '화목 영어학원 \n25/12/29~31 기말고사'");
+    insert("students", "id, created_at, name, gender, school, grade, parent, parent_phone, state", "'7', '2025-11-03 00:00:00', '김소연', '여', '둔산중', '중2', '모', '010-4440-9436', '재원'");
+    insert("students", "id, created_at, name, gender, school, grade, parent, parent_phone, state", "'8', '2025-11-03 00:00:00', '서혜원', '여', '전민중', '중2', '모', '010-7277-3532', '재원'");
+    insert("students", "id, created_at, name, gender, school, grade, parent, parent_phone, state", "'9', '2025-11-03 00:00:00', '신유림', '여', '삼천중', '중2', '모', '010-5004-1543', '재원'");
+    insert("students", "id, created_at, name, gender, school, grade, parent, parent_phone, state", "'10', '2025-11-03 00:00:00', '이서윤', '여', '문정중', '중2', '모', '010-9990-8965', '재원'");
+    insert("students", "id, created_at, name, gender, school, grade, parent, parent_phone, state", "'11', '2025-11-03 00:00:00', '이시연', '여', '문정중', '중2', '모', '010-7455-7997', '재원'");
+    insert("students", "id, created_at, name, gender, school, grade, parent, parent_phone, state", "'12', '2025-11-03 00:00:00', '임동현', '남', '삼천중', '중2', '모', '010-9364-9296', '재원'");
+    insert("students", "id, created_at, name, gender, school, grade, parent, parent_phone, state", "'13', '2025-11-03 00:00:00', '장윤진', '여', '삼천중', '중2', '모', '010-7997-8308', '재원'");
+    insert("students", "id, created_at, name, gender, school, grade, parent, parent_phone, state", "'14', '2025-11-03 00:00:00', '최인제', '남', '버드내중', '중2', '모', '010-6664-8116', '재원'");
+    insert("students", "id, created_at, name, gender, school, grade, parent, parent_phone, state", "'15', '2026-01-06 00:00:00', '김한결', '남', '탄방중', '중2', '모', '010-3471-3157', '재원'");
+    insert("students", "id, created_at, name, gender, school, grade, state", "'16', '2025-11-03 00:00:00', '조아라', '여', '문정중', '중2', '재원'");
+    insert("students", "id, created_at, name, gender, school, grade, state", "'17', '2025-11-03 00:00:00', '김은승', '여', '하기중', '중2', '재원'");
+    insert("students", "id, created_at, name, gender, school, grade, state", "'18', '2025-11-03 00:00:00', '박시우', '남', '대덕중', '중2', '재원'");
+    insert("students", "id, created_at, name, gender, school, grade, state", "'19', '2025-12-05 00:00:00', '김지아', '여', '갑천중', '중1', '재원'");
+    insert("students", "id, created_at, name, gender, school, grade, state, memo", "'20', '2025-12-05 00:00:00', '우주환', '남', '갑천중', '중1', '재원', '집중력 낮고 수업 중 말 많음. 핸드폰 몰래 사용하는 경우가 있음. 숙제 안해놓고 해왔다고 하는 경우 있음. 성취도는 중상. \n필기가 잘 안보이고 잘 안 하기도 함. 필기 점검 필수.\n주의를 단호하지만 과히지 않게 주는 게 좋음. \n부모님 모두 경찰직으로 엄격. 가정과의 연결이 필요할 경우, 전화보다는 채널이나 문자가 빠른듯…? 경찰 부모님이라는 특성상 ‘논리적, 간결하게’ 정리해서 연락하길 추천드림'");
+    insert("students", "id, created_at, name, gender, school, grade, state, memo", "'21', '2025-12-05 00:00:00', '정승호', '남', '삼천중', '중1', '재원', '조용. 자기 페이스 유지하는 스타일. 놀림 받아도 무던하게 넘김. 조용히 학습에 임하는 태도가 일관적. 과제 충실하게 해옴. 스스로 문제 해결했을 때 뿌듯. 계산실수 많음. 검산 습관 약한듯. 이해 여부가 잘 드러나지 않아 수업 중 확인 필수. 성취감 자주 느끼게 해주는 게 동기 유지에 중요한 타입.'");
+    insert("students", "id, created_at, name, gender, school, grade, state, memo", "'22', '2025-12-05 00:00:00', '조선우', '남', '관저중', '중1', '재원', '차분한 편. 자기주도학습 가능한 학생. 수업시간 딴짓 안하고 문제풀이 묵묵히 집중. 성취도 반에서 가장 뛰어남. 완벽주의적 성향이 있는 것 같음.\n어머니가 매우 꼼꼼히 학습 챙기심.\n중학 진학 후 내신 성적에 대한 불안이 높음(부모,학생 모두). 진학형 피드백을 적극적으로 주는 것이 매우 중요. 어머니께는 중등 내신 관리 시스템이 있다는 점을 구체적으로 안내해드리는 것이 신뢰 확보에 도움이 됨\n정서적 안정감 유지 필요. 긍정적 피드백 꾸준히 제공.'");
+    insert("students", "id, created_at, name, gender, grade, state", "'23', '2026-01-16 00:00:00', '김규현', '남', '중1', '재원'");
+    insert("students", "id, created_at, name, gender, grade, state", "'24', '2026-01-16 00:00:00', '서지현', '여', '중1', '재원'");
+    insert("group_students", "id, created_at, group_id, student_id", "'1', '2025-11-03 00:00:00', '1', '1'");
+    insert("group_students", "id, created_at, group_id, student_id", "'2', '2025-11-03 00:00:00', '1', '2'");
+    insert("group_students", "id, created_at, group_id, student_id", "'3', '2025-11-03 00:00:00', '1', '3'");
+    insert("group_students", "id, created_at, group_id, student_id", "'4', '2025-11-03 00:00:00', '1', '4'");
+    insert("group_students", "id, created_at, group_id, student_id", "'5', '2025-11-03 00:00:00', '1', '5'");
+    insert("group_students", "id, created_at, group_id, student_id", "'6', '2025-12-22 00:00:00', '1', '6'");
+    insert("group_students", "id, created_at, group_id, student_id", "'7', '2025-11-03 00:00:00', '2', '7'");
+    insert("group_students", "id, created_at, group_id, student_id", "'8', '2025-11-03 00:00:00', '2', '8'");
+    insert("group_students", "id, created_at, group_id, student_id", "'9', '2025-11-03 00:00:00', '2', '9'");
+    insert("group_students", "id, created_at, group_id, student_id", "'10', '2025-11-03 00:00:00', '2', '10'");
+    insert("group_students", "id, created_at, group_id, student_id", "'11', '2025-11-03 00:00:00', '2', '11'");
+    insert("group_students", "id, created_at, group_id, student_id", "'12', '2025-11-03 00:00:00', '2', '12'");
+    insert("group_students", "id, created_at, group_id, student_id", "'13', '2025-11-03 00:00:00', '2', '13'");
+    insert("group_students", "id, created_at, group_id, student_id", "'14', '2025-11-03 00:00:00', '2', '14'");
+    insert("group_students", "id, created_at, group_id, student_id", "'15', '2026-01-06 00:00:00', '2', '15'");
+    insert("group_students", "id, created_at, group_id, student_id", "'16', '2025-11-03 00:00:00', '3', '16'");
+    insert("group_students", "id, created_at, group_id, student_id", "'17', '2025-11-03 00:00:00', '3', '17'");
+    insert("group_students", "id, created_at, group_id, student_id", "'18', '2025-11-03 00:00:00', '3', '18'");
+    insert("group_students", "id, created_at, group_id, student_id", "'19', '2025-12-05 00:00:00', '4', '19'");
+    insert("group_students", "id, created_at, group_id, student_id", "'20', '2025-12-05 00:00:00', '4', '20'");
+    insert("group_students", "id, created_at, group_id, student_id", "'21', '2025-12-05 00:00:00', '4', '21'");
+    insert("group_students", "id, created_at, group_id, student_id", "'22', '2025-12-05 00:00:00', '4', '22'");
+    insert("group_students", "id, created_at, group_id, student_id", "'23', '2026-01-16 00:00:00', '4', '23'");
+    insert("group_students", "id, created_at, group_id, student_id", "'24', '2026-01-16 00:00:00', '4', '24'");
     saveDB();
     
     console.log("🌱 seed done");
   }
+
+  // ============================================================
+  // INSERT
+  // ============================================================
+  // #region
+
+  function insert(table, fields, values) {
+    db.run(`INSERT INTO ${table} (${fields}) VALUES (${values});`);
+    
+    const recordedTable = ['groups', 'teachers', 'group_teachers', 'schedules', 'students', 'group_students'];
+    if (!recordedTable.includes(table)) return;
+
+    const id = db.exec(`SELECT last_insert_rowid()`)[0].values[0][0];
+    const newRow = getRow(table, {id: id});
+
+    const changed_fields = Object.keys(newRow);
+    
+    db.run(`
+      INSERT INTO update_logs (table_name, record_id, action, changed_fields, before_value, after_value)
+      VALUES (?, ?, 'INSERT', ?, ?, ?);
+    `, [
+      table, id,
+      JSON.stringify(changed_fields),
+      JSON.stringify({}),
+      JSON.stringify(newRow)
+    ]);
+  }
+
+  // #endregion
 
   // ============================================================
   // GET
@@ -362,8 +383,39 @@
     return resultToObjects(teachers[0]);
   }
 
+  function getGroup(group_id) {
+    const fields = formatFieldWithAlias('g.id, g.name, g.memo');
+
+    const row = db.exec(`
+      SELECT ${fields}
+      FROM groups g
+      WHERE g.id = ?
+    `, [group_id]);
+
+    return resultToObjects(row[0])[0];
+  }
+
   function getTeacher(teacher_id) {
     return getRow("teachers", { id: teacher_id });
+  }
+
+  function getTeachersByGroup(group_id) {
+    const fields = formatFieldWithAlias('t.id, t.name, t.gender, t.state, t.memo, gt.id, gt.role, gt.subject');
+
+    const row = db.exec(`
+      SELECT ${fields}
+      FROM group_teachers gt
+      LEFT JOIN teachers t ON gt.teacher_id = t.id
+      WHERE gt.group_id = ?
+      ORDER BY
+        CASE gt.role
+          WHEN '담임' THEN 1
+          WHEN '부담임' THEN 2
+          ELSE 3
+        END
+    `, [group_id]);
+
+    return resultToObjects(row[0]);
   }
 
   function getStudentsNumber(group_id) {
@@ -372,6 +424,19 @@
       WHERE group_id = ?
     `, [group_id]);
     return res[0]?.values.length | 0;
+  }
+
+  function getSchedulesByGroup(group_id) {
+    const fields = formatFieldWithAlias('sc.id, sc.teacher_id, sc.day, sc.start_time, sc.end_time');
+
+    const row = db.exec(`
+      SELECT ${fields}
+      FROM schedules AS sc
+      WHERE group_id = ?
+      ORDER BY day, start_time
+    `, [group_id]);
+
+    return resultToObjects(row[0]);
   }
 
   function getSchedulesByTeacher(teacher_id) {
@@ -385,7 +450,7 @@
   }
 
   /**
-   * 해당 선생님이 담당하는 반 
+   * 해당 선생님이 담당하는 반 정보
    * @returns {{ group: Group, schedules: Schedule[] }[]}
    */
   function getGroupDetailsByTeacher(teacher_id) {
@@ -414,6 +479,40 @@
 
     return groupDetails;
   }
+
+  function getStudentsByGroup(groupId) {
+    const fields = formatFieldWithAlias(`
+      st.id, st.name, st.gender, st.school, st.grade,
+      st.phone, st.parent, st.parent_phone, st.state, st.memo`);
+
+    const res = db.exec(`
+      SELECT ${fields}
+      FROM students AS st
+      JOIN group_students as gs ON gs.group_id = ?
+      WHERE gs.student_id = st.id
+      ORDER BY name`,
+      [groupId]
+    );
+    return resultToObjects(res[0]);
+  }
+
+  function getUpdateLogsByGroup(groupId) {
+    const fields = formatFieldWithAlias(`
+      ul.id, ul.updated_at, ul.action, ul.changed_fields,
+      ul.before_value, ul.after_value`);
+
+    const res = db.exec(`
+      SELECT ${fields}
+      FROM update_logs AS ul
+      WHERE table_name = 'groups'
+      AND record_id = ?
+      ORDER BY updated_at`,
+      [groupId]
+    );
+
+    return resultToObjects(res[0]);
+  }
+
   App.db = {
     ...App.db,
     // DB
@@ -426,7 +525,12 @@
     seed,
     // GET
     getAllTeachers,
+    getGroup,
     getTeacher,
+    getTeachersByGroup,
     getGroupDetailsByTeacher,
+    getSchedulesByGroup,
+    getStudentsByGroup,
+    getUpdateLogsByGroup,
   };
 })(window.App);

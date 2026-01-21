@@ -11,10 +11,13 @@
   const DB_COLUMNS = Object.freeze({
     groups: {
       name: "TEXT NOT NULL",
+      memo: "TEXT DEFAULT ''",
     },
 
     teachers: {
       name: "TEXT NOT NULL",
+      gender: "TEXT NOT NULL", // 남, 여
+      state: "TEXT DEFAULT ''", // 재직, 휴직, 퇴직
       memo: "TEXT DEFAULT ''",
     },
 
@@ -22,7 +25,7 @@
       group_id: "INTEGER NOT NULL",
       teacher_id: "INTEGER NOT NULL",
       role: "TEXT NOT NULL", // 담임, 부담임
-      memo: "TEXT DEFAULT ''",
+      subject: "TEXT DEFAULT ''",
     },
 
     schedules: {
@@ -35,11 +38,13 @@
 
     students: {
       name: "TEXT NOT NULL",
+      gender: "TEXT NOT NULL", // 남, 여
       school: "TEXT DEFAULT ''",
       grade: "TEXT DEFAULT ''",
       phone: "TEXT DEFAULT ''", // 010-0000-0000
       parent: "TEXT DEFAULT ''",
       parent_phone: "TEXT DEFAULT ''", // 010-0000-0000
+      state: "TEXT DEFAULT ''", // 재원, 휴원, 퇴원
       memo: "TEXT DEFAULT ''",
     },
 
@@ -60,7 +65,7 @@
     attendance_records: {
       date: "DATE NOT NULL", // YYYY-MM-DD
       student_id: "INTEGER NOT NULL",
-      status: "TEXT NOT NULL", // 출석, 지각, 결석
+      status: "TEXT NOT NULL", // 출석, 지각, 결석, 조퇴
       memo: "TEXT DEFAULT ''",
     },
 
@@ -71,6 +76,7 @@
       lesson: "TEXT DEFAULT ''",
       homework: "TEXT DEFAULT ''",
       exam_id: "INTEGER",
+      notice: "TEXT DEFAULT ''",
     },
 
     plan_overrides: {
@@ -78,6 +84,7 @@
       student_id: "INTEGER NOT NULL",
       lesson: "TEXT DEFAULT ''",
       homework: "TEXT DEFAULT ''",
+      notice: "TEXT DEFAULT ''",
       __unique: "UNIQUE(plan_id, student_id)",
     },
 
@@ -96,6 +103,19 @@
       date: "DATE",
       score: "INTEGER",
       memo: "TEXT DEFAULT ''",
+    },
+
+    consults: {
+      date: "TEXT DEFAULT ''",
+      student_id: "INTEGER",
+      content: "TEXT",
+    },
+
+    todos: {
+      date: "TEXT DEFAULT ''",
+      content: "TEXT DEFAULT ''",
+      is_completed: "BOOLEAN DEFAULT FALSE",
+      completed_at: "TEXT DEFAULT ''",
     },
 
     math_units: {
