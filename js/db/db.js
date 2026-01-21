@@ -43,10 +43,28 @@
    */
   function saveDB() {
     if (!db) return;
+    App.utils.logger.info("DB.saveDB: 저장");
+
+    // spread operator로 인자를 너무 많이 넘겨서 스택이 터지는 것을 방지하기 위해
+    // Blob + FileReader 사용.
     const data = db.export();
-    localStorage.setItem(App.utils.constants.DB_STORAGE_KEY, btoa(String.fromCharCode(...data)));
+    const blob = new Blob([data], { type: "application/octet-stream" });
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const base64 = reader.result.split(",")[1];
+      localStorage.setItem(
+        App.utils.constants.DB_STORAGE_KEY,
+        base64
+      );
+    };
+
+    reader.readAsDataURL(blob);
   }
 
+  /**
+   * 새로운 DB 생성
+   */
   function createNewDB() {
     App.utils.logger.info("DB.createNewDB: 새로운 DB 생성");
 
