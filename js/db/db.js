@@ -352,20 +352,20 @@
     insert("group_students", "id, created_at, group_id, student_id", "'22', '2025-12-05 00:00:00', '4', '22'");
     insert("group_students", "id, created_at, group_id, student_id", "'23', '2026-01-16 00:00:00', '4', '23'");
     insert("group_students", "id, created_at, group_id, student_id", "'24', '2026-01-16 00:00:00', '4', '24'");
-    saveDB();
     
     console.log("🌱 seed done");
   }
 
   // ============================================================
-  // INSERT
+  // INSERT, UPDATE
   // ============================================================
   // #region
+
+  const recordedTable = ['groups', 'teachers', 'group_teachers', 'schedules', 'students', 'group_students'];
 
   function insert(table, fields, values) {
     db.run(`INSERT INTO ${table} (${fields}) VALUES (${values});`);
     
-    const recordedTable = ['groups', 'teachers', 'group_teachers', 'schedules', 'students', 'group_students'];
     if (!recordedTable.includes(table)) return;
 
     const id = db.exec(`SELECT last_insert_rowid()`)[0].values[0][0];
@@ -373,15 +373,21 @@
 
     const changed_fields = Object.keys(newRow);
     
+    changed_fields.forEach(field => {
+      db.run(`
+        INSERT INTO update_logs (table_name, record_id, action, changed_field, before_value, after_value)
+        VALUES (?, ?, 'INSERT', ?, '', ?);
+      `, [ table, id, field, newRow[field] ]);
+    });
+  }
+
+  function update(table, id, column, value) {
+    const beforeValue = getRow(table, {id: id});
+    db.run(`UPDATE ${table} SET ${column}=? WHERE id=?`, [value, id]);
     db.run(`
-      INSERT INTO update_logs (table_name, record_id, action, changed_fields, before_value, after_value)
-      VALUES (?, ?, 'INSERT', ?, ?, ?);
-    `, [
-      table, id,
-      JSON.stringify(changed_fields),
-      JSON.stringify({}),
-      JSON.stringify(newRow)
-    ]);
+      INSERT INTO update_logs (table_name, record_id, action, changed_field, before_value, after_value)
+      VALUES (?, ?, 'UPDATE', ?, ?, ?);
+    `, [ table, id, column, beforeValue[column], value ]);
   }
 
   // #endregion
@@ -516,7 +522,7 @@
 
   function getUpdateLogsByGroup(groupId) {
     const fields = formatFieldWithAlias(`
-      ul.id, ul.updated_at, ul.action, ul.changed_fields,
+      ul.id, ul.updated_at, ul.action, ul.changed_field,
       ul.before_value, ul.after_value`);
 
     const res = db.exec(`
@@ -541,6 +547,8 @@
     restoreDB,
     // SEED
     seed,
+    // INSERT, UPDATE
+    update,
     // GET
     getAllTeachers,
     getGroup,

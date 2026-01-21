@@ -56,7 +56,7 @@
       'ul.table_name': 'log_table_name',
       'ul.record_id': 'log_record_id',
       'ul.action': 'log_action',
-      'ul.changed_fields': 'log_changed_fields',
+      'ul.changed_field': 'log_changed_field',
       'ul.before_value': 'log_before_value',
       'ul.after_value': 'log_after_value',
       'ul.updated_at': 'log_date',

@@ -226,9 +226,9 @@
       editable: false
     },
     {
-      key: "log_changed_fields",
+      key: "log_changed_field",
       label: "수정 타입",
-      source: { table: "update_logs", column: "changed_fields", idField: "log_id" },
+      source: { table: "update_logs", column: "changed_field", idField: "log_id" },
       editable: false
     },
     {

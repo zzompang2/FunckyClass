@@ -69,17 +69,16 @@
 
 /**
  * 데이터 변경 이력
- * @typedef {Object} ChangeLog
+ * @typedef {Object} UpdateLog
  * @property {number} id
  * @property {string} created_at
  * @property {string} updated_at
  * @property {string} table_name    // groups | teachers | group_teachers | schedules | students | group_students
  * @property {number} record_id
  * @property {string} action        // INSERT | UPDATE | DELETE
- * @property {string|null} changed_fields // JSON string
- * @property {string|null} before_value   // JSON string
- * @property {string|null} after_value    // JSON string
- * @property {string} changed_at    // ISO date string
+ * @property {string|null} changed_field
+ * @property {string|null} before_value
+ * @property {string|null} after_value
  */
 
 /**

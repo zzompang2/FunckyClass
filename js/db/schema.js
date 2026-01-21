@@ -57,9 +57,9 @@
       table_name: "TEXT NOT NULL", // groups, teachers, group_teachers, schedules, students, group_students
       record_id: "INTEGER NOT NULL",
       action: "TEXT NOT NULL", // INSERT, UPDATE, DELETE
-      changed_fields: "TEXT", // JSON string ["name", "school"]
-      before_value: "TEXT",   // JSON string {name: "철수", school: "ㅁㅁ중"}
-      after_value: "TEXT",    // JSON string {name: "영희", school: "ㅇㅇ중"}
+      changed_field: "TEXT NOT NULL", // ex) "name"
+      before_value: "TEXT NOT NULL",   // ex) "쳘슈"
+      after_value: "TEXT NOT NULL",    // ex) "철수"
     },
 
     attendance_records: {
@@ -75,7 +75,7 @@
       memo: "TEXT DEFAULT ''",
       lesson: "TEXT DEFAULT ''",
       homework: "TEXT DEFAULT ''",
-      exam_id: "INTEGER",
+      exam_id: "INTEGER DEFAULT 0",
       notice: "TEXT DEFAULT ''",
     },
 
@@ -90,25 +90,25 @@
 
     exams: {
       title: "TEXT NOT NULL", // 시험지 이름
-      unit: "TEXT", // 과목, 단원
-      difficulty: "TEXT",
-      question_number: "INTEGER", // 문제 개수
-      full_score: "INTEGER", // 만점 몇 점인지
+      unit: "TEXT DEFAULT ''", // 과목, 단원
+      difficulty: "TEXT DEFAULT ''",
+      question_number: "INTEGER DEFAULT 0", // 문제 개수
+      full_score: "INTEGER DEFAULT 100", // 만점 몇 점인지
       memo: "TEXT DEFAULT ''",
     },
 
     exam_scores: {
       exam_id: "INTEGER NOT NULL",
       student_id: "INTEGER NOT NULL",
-      date: "DATE",
-      score: "INTEGER",
+      date: "DATE NOT NULL",
+      score: "INTEGER NOT NULL",
       memo: "TEXT DEFAULT ''",
     },
 
     consults: {
       date: "TEXT DEFAULT ''",
-      student_id: "INTEGER",
-      content: "TEXT",
+      student_id: "INTEGER DEFAULT 0",
+      content: "TEXT DEFAULT ''",
     },
 
     todos: {

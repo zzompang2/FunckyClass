@@ -78,7 +78,7 @@
 
     log_table_name: WIDTH_NUM.long,
     log_action: WIDTH_NUM.medium,
-    log_changed_fields: WIDTH_NUM.long,
+    log_changed_field: WIDTH_NUM.long,
     log_before_value: WIDTH_NUM.long,
     log_after_value: WIDTH_NUM.long,
     log_date: WIDTH_NUM.long,

@@ -15,7 +15,7 @@ students: { name, school, grade, phone, parent, parent_phone, memo }
 
 group_students: { group_id, student_id }
 
-change_logs: { table_name, record_id, action, changed_fields, before_value, after_value, changed_at }
+change_logs: { table_name, record_id, action, changed_field, before_value, after_value, changed_at }
 // table_name: 
 
 attendance_records: { date, student_id, status, memo }
