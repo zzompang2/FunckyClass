@@ -5,7 +5,7 @@ window.planUI = (function () {
    */
   function renderPlanTab(area) {
     /** @type {Plan[]} */
-    const plans = DB.getPlansByGroup(currentGroupId);
+    const plans = DB.getPlansByGroup(App.state.currentGroupId);
     
     // 계획 추가 버튼
     const addBtn = document.createElement("button");
@@ -23,9 +23,9 @@ window.planUI = (function () {
   }
 
   function addPlan() {
-    DB.addPlan(currentGroupId);
+    DB.addPlan(App.state.currentGroupId);
     DB.saveDB();
-    openTab(currentTab); // 갱신
+    openGroupTab(App.state.currentTab); // 갱신
     
   }
 

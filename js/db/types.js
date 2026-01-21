@@ -1,10 +1,10 @@
 /**
  * 그룹 정보
  * @typedef {Object} Group
- * @property {number} id
+ * @property {number} group_id
+ * @property {string} group_name
  * @property {string} created_at
  * @property {string} updated_at
- * @property {string} name
  */
 
 /**

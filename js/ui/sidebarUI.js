@@ -37,13 +37,11 @@
     
     /** @type {{ group: Group, schedules: Schedule[], number: number }[]} */
     const groupDetails = App.db.getGroupDetailsByTeacher(currentTeacherId); // 선택된 선생님의 모든 스케줄
-
-    App.utils.logger.debug("loadGroups: groupDetails", groupDetails);
     
     groupDetails.forEach(row => {
       const groupBlock = document.createElement("div");
       groupBlock.className = "sidebar-block";
-      groupBlock.onclick = () => groupUI.selectGroup(row.group.id, row.group.name);
+      groupBlock.onclick = () => App.service.group.selectGroup(row.group.id, row.group.name);
 
       let scheduleText = "";
       if (row.schedules.length > 0) {
@@ -73,7 +71,7 @@
   function loadLocalbar() {
     const localbar = document.getElementById("localbar");
 
-    Object.entries(TAB_CONFIG).forEach(([key, value]) => {
+    Object.entries(App.utils.constants.TAB_CONFIG).forEach(([key, value]) => {
       const tabElem = document.createElement("div");
       tabElem.className = "localbar-tab";
       tabElem.addEventListener('click', () => openGroupTab(key));

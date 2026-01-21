@@ -33,21 +33,21 @@
    * @param {number} tab 
    * @returns 
    */
-  function openGroupTab(tab = currentTab) {
-    if (currentGroupId == null) return;
-    if (!TAB_CONFIG[tab]) return;
+  function openGroupTab(tab = App.state.currentTab) {
+    if (App.state.currentGroupId == null) return;
+    if (!App.utils.constants.TAB_CONFIG[tab]) return;
 
     const area = document.getElementById("tabContent");
-    currentTab = tab;
+    App.state.currentTab = tab;
 
     // global bar에 탭 이름 추가
     document.getElementById("selected-tab").innerText = 
-    `/ ${TAB_CONFIG[currentTab].label}`;
+    `/ ${App.utils.constants.TAB_CONFIG[App.state.currentTab].label}`;
 
     // render view
     switch (tab) {
       case 'info':
-        groupUI.renderGroupInfoTab(area);
+        App.ui.group.renderGroupInfoTab(area);
         break;
 
       case 'plans':

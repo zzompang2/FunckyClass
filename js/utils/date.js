@@ -48,7 +48,7 @@
     }
     const month = ("0" + (d.getMonth() + 1)).slice(-2);
     const day = ("0" + d.getDate()).slice(-2);
-    const week = "일월화수목금토"[d.getDay()];
+    const week = dayToText(d.getDay());
 
     return `${year}${month}/${day}(${week})`;
   }
@@ -66,10 +66,15 @@
     return year + "-" + month + "-" + day;
   }
 
+  function formatSchedules(schedules) {
+    return schedules.map(s => `${dayToText(s.day)} ${s.start_time}~${s.end_time}`).join('\n');
+  }
+
   App.utils.date = {
     dayToText,
     formatGradeFromYear,
     formatDateKorean,
     getTodayDate,
+    formatSchedules,
   };
 })(window.App);

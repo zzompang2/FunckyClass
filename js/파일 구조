@@ -14,7 +14,9 @@
  │   ├─ db.js
  │   └─ schema.js
  │
- ├─ repositories/
+ ├─ repositories/ 
+    (테이블 단위 CRUD - 기본적인 데이터 처리 기능 4가지: create read, update, delete)
+    (JOIN X. SQL만 담당)
  │   ├─ groupRepo.js
  │   ├─ teacherRepo.js
  │   ├─ studentRepo.js
@@ -23,7 +25,7 @@
  │   ├─ examRepo.js
  │   └─ attendanceRepo.js
  │
- ├─ services/
+ ├─ services/ (join + 가공 + 정책 결정. UI는 항상 service만 호출)
  │   ├─ groupService.js
  │   ├─ planService.js
  │   ├─ examService.js

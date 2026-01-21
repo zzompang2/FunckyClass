@@ -17,7 +17,7 @@
     App.ui.tableEditor.bind();
 
     App.ui.sidebar.loadGroups();
-    // sidebarUI.loadLocalbar();
+    App.ui.sidebar.loadLocalbar();
     // createContextMenu();
   }
 
