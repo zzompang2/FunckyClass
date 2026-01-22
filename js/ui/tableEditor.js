@@ -11,7 +11,6 @@
   }
 
   const displayFunction = {
-    year: App.utils.date.formatGradeFromYear,
     date: App.utils.date.formatDateKorean,
     schedules: App.utils.date.formatSchedules,
   };
@@ -95,7 +94,6 @@
    *   button?: HTMLElement,
    *   closed?: boolean,
    *   editable?: boolean,
-   *   tableName?: string,
    *   size?: "full" | "fit",
    * }} options
    * @returns {HTMLElement} <table> HTML
@@ -155,9 +153,7 @@
     // ROW
     else {
       list.forEach(row => {
-        html += `
-        <div class="row" data-table="${options.tableName ?? ''}" data-id="${row.id ?? ''}">
-        `;
+        html += `<div class="row">`;
 
         // 데이터 tdata
         columns.forEach(col => {
@@ -176,7 +172,9 @@
           html += `
             <div
               class="tdata"
-              data-col="${col}"
+              data-table="${def.source.table}"
+              data-col="${def.source.column}"
+              data-id="${row[def.source.idField]}"
               data-editable="${def.editable}"
               tabindex="0"
               data-value="${actualValue ?? ""}"
@@ -282,9 +280,8 @@
   function startEdit(tdata) {
     const displayValue = tdata.innerText;
     const col = tdata.dataset.col;
-    const row = tdata.closest("div.row");
-    const id = row.dataset.id;
-    const table = row.dataset.table;
+    const id = tdata.dataset.id;
+    const table = tdata.dataset.table;
 
     tdata.classList.add("editing");
 
@@ -339,7 +336,7 @@
 
     // 값의 변화가 있는 경우
     if (newValue !== tdata.dataset.value) {
-      DB.update(table, id, [col], [newValue]);
+      App.db.update(table, id, col, newValue);
       tdata.dataset.value = newValue;
       if (displayFunction[col]) {
         tdata.innerHTML = `<div class="td-text">${displayFunction[col](newValue)}</div>`;

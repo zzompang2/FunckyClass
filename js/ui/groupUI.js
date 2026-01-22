@@ -19,7 +19,6 @@
 
     // 수정 내역(update_logs) 테이블
     const updateLogs = App.db.getUpdateLogsByGroup(App.state.currentGroupId);
-    console.log("업데이트", updateLogs);
     const logTable = App.ui.tableEditor.objectListToTable(updateLogs, {
       title: "수정 내역",
       closed: true,

@@ -383,6 +383,7 @@
 
   function update(table, id, column, value) {
     const beforeValue = getRow(table, {id: id});
+    App.utils.logger.debug("db.update:", table, id, column, value);
     db.run(`UPDATE ${table} SET ${column}=? WHERE id=?`, [value, id]);
     db.run(`
       INSERT INTO update_logs (table_name, record_id, action, changed_field, before_value, after_value)
