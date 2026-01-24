@@ -74,7 +74,7 @@
     Object.entries(App.utils.constants.TAB_CONFIG).forEach(([key, value]) => {
       const tabElem = document.createElement("div");
       tabElem.className = "localbar-tab";
-      tabElem.addEventListener('click', () => openGroupTab(key));
+      tabElem.addEventListener('click', () => App.ui.navigation.openGroupTab(key));
       tabElem.innerText = value.label;
       localbar.appendChild(tabElem);
     });

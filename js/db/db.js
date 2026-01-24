@@ -538,6 +538,53 @@
     return resultToObjects(res[0]);
   }
 
+  /**
+   * groupId의 모든 계획 데이터 (날짜순)
+   * @param {number} groupId 
+   * @returns {Plan[]}
+   */
+  function getPlansByGroup(groupId) {
+    const fields = formatFieldWithAlias(`
+      p.id, p.group_id, p.date, p.memo,
+      p.lesson, p.homework, p.exam_id, p.notice`);
+
+    const res = db.exec(`
+      SELECT ${fields}
+      FROM plans AS p
+      WHERE group_id = ?
+      ORDER BY (date IS '') DESC, date DESC`,
+      [groupId]
+    );
+    return resultToObjects(res[0]);
+  }
+
+  // #endregion
+
+  // ============================================================
+  // ADD
+  // ============================================================
+  // #region
+
+  /**
+   * 
+   * @param {number} groupId 
+   * @param {string} date 
+   * @param {string} lesson 
+   * @param {string} homework 
+   * @param {string} exam 
+   */
+  function addPlan(groupId, value = {date: '', memo: '', lesson: '', homework: '', notice: ''}) {
+    db.run(
+      `INSERT INTO plans (group_id, date, memo, lesson, homework, notice)
+      VALUES (?, ?, ?, ?, ?, ?)`,
+      [
+        groupId, value.date, value.memo, value.lesson, value.homework, value.notice
+      ]
+    );
+  }
+
+  // #endregion
+
   App.db = {
     ...App.db,
     // DB
@@ -559,5 +606,8 @@
     getSchedulesByGroup,
     getStudentsByGroup,
     getUpdateLogsByGroup,
+    getPlansByGroup,
+    // ADD
+    addPlan,
   };
 })(window.App);

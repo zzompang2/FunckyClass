@@ -60,6 +60,14 @@
       'ul.before_value': 'log_before_value',
       'ul.after_value': 'log_after_value',
       'ul.updated_at': 'log_date',
+      'p.id': 'plan_id',
+      'p.group_id': 'plan_group_id',
+      'p.date': 'plan_date',
+      'p.memo': 'plan_memo',
+      'p.lesson': 'plan_lesson',
+      'p.homework': 'plan_homework',
+      'p.exam_id': 'plan_exam_id',
+      'p.notice': 'plan_notice',
     }),
   };
 })(window.App);

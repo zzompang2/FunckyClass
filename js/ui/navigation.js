@@ -51,7 +51,7 @@
         break;
 
       case 'plans':
-        planUI.renderPlanTab(area);
+        App.ui.plan.renderPlanTab(area);
         break;
 
       case 'scores':

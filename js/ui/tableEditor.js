@@ -81,6 +81,13 @@
     log_before_value: WIDTH_NUM.long,
     log_after_value: WIDTH_NUM.long,
     log_date: WIDTH_NUM.long,
+
+    plan_date: WIDTH_NUM.day,
+    plan_memo: WIDTH_NUM.long,
+    plan_lesson: WIDTH_NUM.long,
+    plan_homework: WIDTH_NUM.long,
+    plan_exam_id: WIDTH_NUM.medium,
+    plan_notice: WIDTH_NUM.long,
   });
 
   /**
@@ -125,33 +132,37 @@
     //   table.style.width = "100%";
     // }
 
-    /* HEADER */
-    const columns = options.columns || Object.keys(list.find(e => e !== undefined));    
-    let html = `<div class="thead"><div class="row">`;
-    columns.forEach(col => {
-      const def = App.db.getColumnDef(col);
-      if (!def) return;
-
-      html += `
-        <div class="th"
-          ${COLUMNS_WIDTH[col] ? `style="width: ${COLUMNS_WIDTH[col]}px; min-width: ${COLUMNS_WIDTH[col]}px"` : ''}>
-          ${def.label}</div>`;
-    });
-    html += "</div></div>";
-
-    /* BODY */
-    html += "<div class='tbody'>";
+    let html = '';
     // 요소가 하나도 없을 때
     if (list.length === 0) {
       html += `
-        <div class="row">
-          <div class="tdata" class="empty" colspan='${columns.length}'>
+        <div class="thead"><div class="row">
+          <div class="th" style="width: 500px"></div>
+        </div></div>
+        <div class="tbody"><div class="row">
+          <div class="tdata empty" style="width: 500px">
             <div class="td-text">요소가 하나도 없습니다.</div>
           </div>
-        </div>`;
-    } 
-    // ROW
+        </div></div>`;
+    }
     else {
+      /* HEADER */
+      const columns = options.columns || Object.keys(list.find(e => e !== undefined));
+      html += `<div class="thead"><div class="row">`;
+      columns.forEach(col => {
+        const def = App.db.getColumnDef(col);
+        if (!def) return;
+
+        html += `
+          <div class="th"
+            ${COLUMNS_WIDTH[col] ? `style="width: ${COLUMNS_WIDTH[col]}px; min-width: ${COLUMNS_WIDTH[col]}px"` : ''}>
+            ${def.label}</div>`;
+      });
+      html += "</div></div>";
+
+      /* BODY */
+      html += "<div class='tbody'>";
+      
       list.forEach(row => {
         html += `<div class="row">`;
 
@@ -164,8 +175,8 @@
           let displayValue;
           if (!actualValue)
             displayValue = "";
-          else if (displayFunction[col])
-            displayValue = displayFunction[col](row[col]);
+          else if (displayFunction[def.source.column])
+            displayValue = displayFunction[def.source.column](row[col]);
           else
             displayValue = actualValue;
           
@@ -184,8 +195,8 @@
         html += `<div class="row-menu-button" onclick="openContextMenu(event)">⋮</div>`;
         html += "</div>"; // div.row
       });
+      html += `</div>`; //div.tbody
     }
-    html += `</div>`; //div.tbody
     
     table.innerHTML = html;
 
@@ -264,7 +275,7 @@
       input.addEventListener("focus", (e) => {
         // 입력된 값이 없을 때, 오늘 날짜로 초기화
         if (!e.target.value) {
-          e.target.value = getTodayDate();
+          e.target.value = App.utils.date.getTodayDate();
         }
       })
     }

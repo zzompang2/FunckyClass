@@ -244,9 +244,42 @@
       editable: true
     },
     
-    
-    
-    
+    {
+      key: "plan_date",
+      label: "날짜",
+      source: { table: "plans", column: "date", idField: "plan_id" },
+      editable: true
+    },
+    {
+      key: "plan_memo",
+      label: "메모",
+      source: { table: "plans", column: "memo", idField: "plan_id" },
+      editable: true
+    },
+    {
+      key: "plan_lesson",
+      label: "수업 내용",
+      source: { table: "plans", column: "lesson", idField: "plan_id" },
+      editable: true
+    },
+    {
+      key: "plan_homework",
+      label: "과제",
+      source: { table: "plans", column: "homework", idField: "plan_id" },
+      editable: true
+    },
+    {
+      key: "plan_exam_id",
+      label: "시험",
+      source: { table: "plans", column: "exam_id", idField: "plan_id" },
+      editable: true
+    },
+    {
+      key: "plan_notice",
+      label: "공지사항",
+      source: { table: "plans", column: "notice", idField: "plan_id" },
+      editable: true
+    },
   ];
 
   App.db.getColumnDef = function (key) {

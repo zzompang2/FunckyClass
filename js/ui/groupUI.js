@@ -55,17 +55,17 @@
   function addStudent() {
     DB.addStudent(App.state.currentGroupId);
     DB.saveDB();
-    openGroupTab("info"); // 갱신
+    App.ui.navigation.openGroupTab("info"); // 갱신
   }
 
   function addSchedule() {
     DB.addSchedule(App.state.currentGroupId);
-    openGroupTab("info"); // 갱신
+    App.ui.navigation.openGroupTab("info"); // 갱신
   }
 
   function deleteSchedule(id) {
     DB.deleteSchedule(id);
-    openGroupTab("info"); // 갱신
+    App.ui.navigation.openGroupTab("info"); // 갱신
   }
 
   function updateSchedule(schedule) {
@@ -73,7 +73,7 @@
       "group_schedules", schedule.id,
       Object.keys(schedule), Object.values(schedule)
     );
-    openGroupTab("info"); // 갱신
+    App.ui.navigation.openGroupTab("info"); // 갱신
   }
 
   App.ui.group = {
