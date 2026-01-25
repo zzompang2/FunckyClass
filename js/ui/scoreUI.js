@@ -39,7 +39,7 @@
     const upcomingPlan = plans.find(p => App.utils.date.isEarlier(p.plan_date, App.utils.date.getTodayDate(1)));
     if (upcomingPlan) selector.value = upcomingPlan.plan_id;
     else selector.value = plans[0];
-    loadScoresByDate(upcomingPlan.plan_id);
+    loadScoresByDate(selector.value);
   }
 
   function loadScoresByDate(planId) {
@@ -47,12 +47,11 @@
     container.innerHTML = '';
 
     const studentScores = App.service.score.getStudentScores(planId);
-    console.log("studentScores", studentScores);
     container.append(App.ui.tableEditor.objectListToTable(studentScores, {
       columns: [
-        "student_name", "attendance", "record_lesson", "prev_homework",
-        "homework_score", "prev_exam", "exam_score", "record_homework",
-        "record_notice", "record_memo",
+        "student_name", "record_memo", "attendance", "record_lesson", "prev_homework",
+        "homework_score", "record_exam", "exam_score", "record_homework",
+        "record_notice", "record_feedback",
       ]
     }));
   }

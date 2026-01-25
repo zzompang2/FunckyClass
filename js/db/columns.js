@@ -342,12 +342,12 @@
     },
     {
       key: "homework_score",
-      label: "과제 진행도(%)",
+      label: "(%)",
       source: { table: "student_records", column: "homework_score", idField: "record_id" },
       editable: true,
     },
     {
-      key: "exam",
+      key: "record_exam",
       label: "테스트",
       source: {
         table: "student_records",
@@ -359,7 +359,7 @@
     },
     {
       key: "exam_score",
-      label: "테스트 점수",
+      label: "점수",
       source: { table: "student_records", column: "exam_score", idField: "record_id" },
       editable: true,
     },
@@ -383,6 +383,17 @@
         column: "notice",
         idField: "record_id",
         placeholder: "plan_notice",
+        editor: "textarea",
+      },
+      editable: true,
+    },
+    {
+      key: "record_feedback",
+      label: "개별 피드백",
+      source: {
+        table: "student_records",
+        column: "feedback",
+        idField: "record_id",
         editor: "textarea",
       },
       editable: true,

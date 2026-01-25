@@ -83,6 +83,7 @@
       attendance: "TEXT DEFAULT ''", // 출석, 지각, 결석, 조퇴
       homework_score: "INTEGER DEFAULT 0", // 0~100 (%)
       exam_score: "INTEGER DEFAULT 0", // 0~100 (점)
+      feedback: "TEXT DEFAULT ''",
       memo: "TEXT DEFAULT ''",
       __unique: "UNIQUE(plan_id, student_id)",
     },

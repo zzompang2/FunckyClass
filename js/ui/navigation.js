@@ -59,6 +59,7 @@
         break;
 
       case 'message':
+        App.ui.message.renderTab(area);
         break;
 
       case 'consult':

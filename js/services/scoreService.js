@@ -1,8 +1,6 @@
 (function (App) {
   function getStudentScores(planId) {
     const [curPlan, prevPlan] = App.db.getCurAndPrevPlans(planId);
-    console.log("현재 / 이전", curPlan, prevPlan);
-
     const students = App.db.getStudentsByGroup(curPlan.plan_group_id);
     const records = App.db.getStudentRecords(curPlan.plan_id);
 
@@ -37,6 +35,7 @@
           record_lesson: record.lesson,
           record_homework: record.homework,
           record_notice: record.notice,
+          record_exam: record.exam,
           attendance: record.attendance,
           homework_score: record.homework_score,
           exam_score: record.exam_score,
@@ -49,9 +48,9 @@
         student_name: st.student_name,
         ...map[st.student_id],
         prev_homework: prevPlan?.plan_homework || '첫수업',
-        prev_exam: prevPlan?.plan_exam || '',
         plan_lesson: curPlan.plan_lesson,
         plan_homework: curPlan.plan_homework,
+        plan_exam: curPlan.plan_exam,
         plan_notice: curPlan.plan_notice,
       };
     });

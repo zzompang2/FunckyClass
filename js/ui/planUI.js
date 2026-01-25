@@ -24,7 +24,6 @@
     App.db.addPlan(App.state.currentGroupId);
     App.db.saveDB();
     App.ui.navigation.openGroupTab(App.state.currentTab); // 갱신
-    
   }
 
   App.ui.plan = {

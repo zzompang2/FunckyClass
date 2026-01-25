@@ -33,7 +33,7 @@
     
     const teacher = App.db.getTeacher(currentTeacherId); // 선택된 선생님 정보
     
-    App.utils.logger.debug("loadGroups: 선택된 선생님", teacher.id, teacher.name);
+    App.utils.logger.debug(`loadGroups: 선택된 선생님 (id,name) = (${teacher.teacher_id}, ${teacher.teacher_name})`);
     
     /** @type {{ group: Group, schedules: Schedule[], number: number }[]} */
     const groupDetails = App.db.getGroupDetailsByTeacher(currentTeacherId); // 선택된 선생님의 모든 스케줄

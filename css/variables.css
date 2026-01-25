@@ -17,6 +17,7 @@
   --color-text-light-3: #555F7B;
 
   --color-brand-1: #4FADFF;
+  --color-warning: #ff4f6c;
   
   --color-bg: var(--color-container-900);
   --color-sidebar: var(--color-container-800);

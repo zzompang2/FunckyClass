@@ -25,6 +25,21 @@
       confirmDelete: "정말 삭제하시겠습니까?",
     },
 
+    TABLE_ALIAS: Object.freeze({
+      'groups': 'g',
+      'teachers': 't',
+      'group_teachers': 'gt',
+      'schedules': 'sc',
+      'students': 'st',
+      'group_students': 'gs',
+      'update_logs': 'ul',
+      'plans': 'p',
+      'student_records': 're',
+      'consults': 'co',
+      'todos': 'to',
+      'math_units': 'ma',
+    }),
+
     FIELD_ALIAS: Object.freeze({
       'g.id': 'group_id',
       'g.name': 'group_name',
@@ -69,12 +84,6 @@
       'p.homework': 'plan_homework',
       'p.exam': 'plan_exam',
       'p.notice': 'plan_notice',
-      'at.id': 'attendance_id',
-      'at.status': 'attendance_status',
-      'at.memo': 'attendance_memo',
-      'hs.id': 'homework_id',
-      'hs.score': 'homework_score',
-      'hs.memo': 'homework_memo',
       're.id': 'record_id',
       're.lesson': 'record_lesson',
       're.homework': 'record_homework',
@@ -83,6 +92,7 @@
       're.attendance': 'attendance',
       're.homework_score': 'homework_score',
       're.exam_score': 'exam_score',
+      're.feedback': 'record_feedback',
       're.memo': 'record_memo',
     }),
 

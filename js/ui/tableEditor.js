@@ -41,14 +41,6 @@
     student_state: WIDTH_NUM.short,
     student_memo: WIDTH_NUM.long,
 
-    changed_at:   WIDTH_NUM.day,
-    date:         95,
-    exam_score:   WIDTH_NUM.long,
-    lesson:       WIDTH_NUM.long,
-    homework:     WIDTH_NUM.long,
-    exam:         WIDTH_NUM.long,
-    notice:       WIDTH_NUM.long,
-    content:      WIDTH_NUM.long,
     schedules:    WIDTH_NUM.long,
 
     log_table_name: WIDTH_NUM.long,
@@ -65,14 +57,15 @@
     plan_exam: WIDTH_NUM.medium,
     plan_notice: WIDTH_NUM.long,
 
+    attendance: WIDTH_NUM.short,
     prev_homework: WIDTH_NUM.medium,
     record_lesson: WIDTH_NUM.medium,
     record_homework: WIDTH_NUM.medium,
     record_exam: WIDTH_NUM.medium,
     record_notice: WIDTH_NUM.medium,
-    attendance: WIDTH_NUM.medium,
-    homework_score: WIDTH_NUM.medium,
-    exam_score: WIDTH_NUM.medium,
+    homework_score: WIDTH_NUM.short,
+    exam_score: WIDTH_NUM.short,
+    record_feedback: WIDTH_NUM.medium,
     record_memo: WIDTH_NUM.medium,
   });
 
@@ -228,7 +221,7 @@
    */
   function createEditor(key, rawValue) {
     const { editor, options } = App.db.getColumnDef(key).source;
-    console.log(editor, options, rawValue);
+    console.log(`createEditor: (editor, options, rawValue) = (${editor}, ${options}, ${rawValue})`);
 
     if (editor == "schedules") {
       return;

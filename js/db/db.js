@@ -391,8 +391,10 @@
   }
 
   function update(table, id, column, value) {
-    const beforeValue = getRow(table, {id: id});
-    App.utils.logger.debug("db.update:", table, id, column, value);
+    App.utils.logger.debug(`db.update: \ntable(${table}), id(${id}), column(${column}), value(${value})`);
+
+    const row = db.exec(`SELECT * FROM ${table} WHERE id = ?`, [id]);
+    const beforeValue = resultToObjects(row[0])[0];
     db.run(`UPDATE ${table} SET ${column}=? WHERE id=?`, [value, id]);
     db.run(`
       INSERT INTO update_logs (table_name, record_id, action, changed_field, before_value, after_value)
@@ -433,6 +435,32 @@
     return getRow("teachers", { id: teacher_id });
   }
 
+  function getStudent(student_id) {
+    return getRow("students", { id: student_id });
+  }
+
+  function getPlan(plan_id) {
+    return getRow("plans", { id: plan_id });
+  }
+
+  function getStudentRecord(plan_id, student_id) {
+    const fields = formatFieldWithAlias(`
+      p.date, p.lesson, p.homework, p.exam, p.notice,
+      re.lesson, re.homework, re.exam, re.notice,
+      re.attendance, re.homework_score, re.exam_score, re.feedback`);
+
+    const res = db.exec(`
+      SELECT ${fields}
+      FROM student_records re
+      JOIN plans p
+        ON p.id = re.plan_id
+      WHERE re.plan_id = ?
+      AND re.student_id = ?
+    `, [plan_id, student_id]);
+
+    return resultToObjects(res[0])[0];
+  }
+
   function getTeachersByGroup(group_id) {
     const fields = formatFieldWithAlias('t.id, t.name, t.gender, t.state, t.memo, gt.id, gt.role, gt.subject');
 
@@ -443,8 +471,8 @@
       WHERE gt.group_id = ?
       ORDER BY
         CASE gt.role
-          WHEN '담임' THEN 1
-          WHEN '부담임' THEN 2
+          WHEN 'main' THEN 1
+          WHEN 'sub' THEN 2
           ELSE 3
         END
     `, [group_id]);
@@ -600,7 +628,7 @@
   function getStudentRecords(planId) {
     const fields = formatFieldWithAlias(`
       st.id, re.id, re.lesson, re.homework, re.exam, re.notice, re.attendance,
-      re.homework_score, re.exam_score, re.memo`);
+      re.homework_score, re.exam_score, re.feedback, re.memo`);
 
     const res = db.exec(`
       SELECT ${fields}
@@ -672,6 +700,9 @@
     getAllTeachers,
     getGroup,
     getTeacher,
+    getStudent,
+    getPlan,
+    getStudentRecord,
     getTeachersByGroup,
     getGroupDetailsByTeacher,
     getSchedulesByGroup,
