@@ -52,6 +52,7 @@
       'st.parent_phone': 'student_parent_phone',
       'st.state': 'student_state',
       'st.memo': 'student_memo',
+      'st.created_at': 'student_created_at',
       'ul.id': 'log_id',
       'ul.table_name': 'log_table_name',
       'ul.record_id': 'log_record_id',
@@ -66,8 +67,65 @@
       'p.memo': 'plan_memo',
       'p.lesson': 'plan_lesson',
       'p.homework': 'plan_homework',
-      'p.exam_id': 'plan_exam_id',
+      'p.exam': 'plan_exam',
       'p.notice': 'plan_notice',
+      'at.id': 'attendance_id',
+      'at.status': 'attendance_status',
+      'at.memo': 'attendance_memo',
+      'hs.id': 'homework_id',
+      'hs.score': 'homework_score',
+      'hs.memo': 'homework_memo',
+      're.id': 'record_id',
+      're.lesson': 'record_lesson',
+      're.homework': 'record_homework',
+      're.exam': 'record_exam',
+      're.notice': 'record_notice',
+      're.attendance': 'attendance',
+      're.homework_score': 'homework_score',
+      're.exam_score': 'exam_score',
+      're.memo': 'record_memo',
     }),
+
+    TEACHER_STATES: [
+      { value: "active", label: "재직" },
+      { value: "inactive", label: "퇴직" },
+      { value: "", label: "미입력" },
+    ],
+
+    TEACHER_ROLES: [
+      { value: "main", label: "담임" },
+      { value: "sub", label: "부담임" },
+      { value: "", label: "미입력" },
+    ],
+
+    DAY_STATES: [
+      { value: 0, label: "일" },
+      { value: 1, label: "월" },
+      { value: 2, label: "화" },
+      { value: 3, label: "수" },
+      { value: 4, label: "목" },
+      { value: 5, label: "금" },
+      { value: 6, label: "토" }
+    ],
+
+    GENDER_STATES: [
+      { value: "man", label: "남" },
+      { value: "woman", label: "여" },
+    ],
+
+    STUDENT_STATES: [
+      { value: "active", label: "재원" },
+      { value: "inactive", label: "휴원" },
+      { value: "dropped", label: "퇴원" },
+      { value: "", label: "미입력" },
+    ],
+
+    ATTENDANCE_STATES: [
+      { value: "present", label: "출석" },
+      { value: "absent", label: "결석" },
+      { value: "late", label: "지각" },
+      { value: "leave", label: "조퇴" },
+      { value: "", label: "미입력" },
+    ],
   };
 })(window.App);

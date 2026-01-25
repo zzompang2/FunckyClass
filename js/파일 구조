@@ -22,8 +22,7 @@
  │   ├─ studentRepo.js
  │   ├─ scheduleRepo.js
  │   ├─ planRepo.js
- │   ├─ examRepo.js
- │   └─ attendanceRepo.js
+ │   └─ examRepo.js
  │
  ├─ services/ (join + 가공 + 정책 결정. UI는 항상 service만 호출)
  │   ├─ groupService.js
@@ -37,5 +36,4 @@
      ├─ groupUI.js
      ├─ scheduleUI.js
      ├─ planUI.js
-     ├─ examUI.js
-     └─ attendanceUI.js
+     └─ examUI.js 

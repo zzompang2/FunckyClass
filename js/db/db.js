@@ -275,25 +275,25 @@
     insert("groups", "id, created_at, name", "'5', '2026-01-02 00:00:00', '경시대회'");
     insert("groups", "id, created_at, name", "'6', '2026-01-05 00:00:00', '9M2'");
     insert("groups", "id, created_at, name", "'7', '2026-01-15 00:00:00', '9M3'");
-    insert("teachers", "id, created_at, name, gender, state", "'1', '2025-11-03 00:00:00', '함창수', '남', '재직'");
-    insert("teachers", "id, created_at, name, gender, state, memo", "'2', '2025-11-03 00:00:00', '김지영', '여', '재직', '중등부 팀장'");
-    insert("teachers", "id, created_at, name, gender, state", "'3', '2025-11-03 00:00:00', '정원재', '남', '재직'");
-    insert("teachers", "id, created_at, name, gender, state", "'4', '2025-11-03 00:00:00', '김도영', '여', '재직'");
-    insert("teachers", "id, created_at, name, gender, state, memo", "'5', '2025-11-03 00:00:00', '박범영', '남', '재직', '팀장'");
-    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'1', '2025-11-03 00:00:00', '1', '1', '담임', '미적분1 기본'");
-    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'2', '2025-11-03 00:00:00', '1', '4', '부담임', '대수 심화'");
-    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'3', '2025-11-03 00:00:00', '2', '1', '담임', '공통수학1 심화'");
-    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'4', '2025-11-03 00:00:00', '2', '3', '부담임', '공통수학2 기본'");
-    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'5', '2025-11-03 00:00:00', '3', '2', '담임', '미적분1 기본'");
-    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'6', '2025-11-03 00:00:00', '3', '1', '부담임', '대수 심화'");
-    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'7', '2025-12-05 00:00:00', '4', '2', '담임', '중2-1 기본'");
-    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'8', '2025-12-05 00:00:00', '4', '1', '부담임', '중1-2 심화'");
-    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'9', '2026-01-02 00:00:00', '5', '5', '담임', '경시 - 대수 관련'");
-    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'10', '2026-01-02 00:00:00', '5', '1', '부담임', '경시 - 기하 관련'");
-    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'11', '2026-01-05 00:00:00', '6', '2', '담임', '공통수학2 기본'");
-    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'12', '2026-01-05 00:00:00', '6', '1', '부담임', '공통수학1 심화'");
-    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'13', '2026-01-15 00:00:00', '7', '1', '담임', '중3-1 기본'");
-    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'14', '2026-01-15 00:00:00', '7', '3', '부담임', '중3-1 기본 보조'");
+    insert("teachers", "id, created_at, name, gender, state", "'1', '2025-11-03 00:00:00', '함창수', 'man', 'active'");
+    insert("teachers", "id, created_at, name, gender, state, memo", "'2', '2025-11-03 00:00:00', '김지영', 'woman', 'active', '중등부 팀장'");
+    insert("teachers", "id, created_at, name, gender, state", "'3', '2025-11-03 00:00:00', '정원재', 'man', 'active'");
+    insert("teachers", "id, created_at, name, gender, state", "'4', '2025-11-03 00:00:00', '김도영', 'woman', 'active'");
+    insert("teachers", "id, created_at, name, gender, state, memo", "'5', '2025-11-03 00:00:00', '박범영', 'man', 'active', '팀장'");
+    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'1', '2025-11-03 00:00:00', '1', '1', 'main', '미적분1 기본'");
+    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'2', '2025-11-03 00:00:00', '1', '4', 'sub', '대수 심화'");
+    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'3', '2025-11-03 00:00:00', '2', '1', 'main', '공통수학1 심화'");
+    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'4', '2025-11-03 00:00:00', '2', '3', 'sub', '공통수학2 기본'");
+    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'5', '2025-11-03 00:00:00', '3', '2', 'main', '미적분1 기본'");
+    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'6', '2025-11-03 00:00:00', '3', '1', 'sub', '대수 심화'");
+    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'7', '2025-12-05 00:00:00', '4', '2', 'main', '중2-1 기본'");
+    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'8', '2025-12-05 00:00:00', '4', '1', 'sub', '중1-2 심화'");
+    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'9', '2026-01-02 00:00:00', '5', '5', 'main', '경시 - 대수 관련'");
+    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'10', '2026-01-02 00:00:00', '5', '1', 'sub', '경시 - 기하 관련'");
+    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'11', '2026-01-05 00:00:00', '6', '2', 'main', '공통수학2 기본'");
+    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'12', '2026-01-05 00:00:00', '6', '1', 'sub', '공통수학1 심화'");
+    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'13', '2026-01-15 00:00:00', '7', '1', 'main', '중3-1 기본'");
+    insert("group_teachers", "id, created_at, group_id, teacher_id, role, subject", "'14', '2026-01-15 00:00:00', '7', '3', 'sub', '중3-1 기본 보조'");
     insert("schedules", "id, created_at, group_id, teacher_id, day, start_time, end_time", "'1', '2025-11-03 00:00:00', '1', '1', '1', '17:20', '20:00'");
     insert("schedules", "id, created_at, group_id, teacher_id, day, start_time, end_time", "'2', '2025-11-03 00:00:00', '1', '1', '3', '17:20', '20:00'");
     insert("schedules", "id, created_at, group_id, teacher_id, day, start_time, end_time", "'3', '2025-11-03 00:00:00', '2', '1', '2', '17:20', '20:00'");
@@ -304,30 +304,30 @@
     insert("schedules", "id, created_at, group_id, teacher_id, day, start_time, end_time", "'8', '2026-01-05 00:00:00', '6', '1', '3', '20:10', '22:50'");
     insert("schedules", "id, created_at, group_id, teacher_id, day, start_time, end_time", "'9', '2026-01-15 00:00:00', '7', '1', '2', '20:10', '22:50'");
     insert("schedules", "id, created_at, group_id, teacher_id, day, start_time, end_time", "'10', '2026-01-15 00:00:00', '7', '1', '4', '20:10', '22:50'");
-    insert("students", "id, created_at, name, gender, school, grade, phone, parent, state", "'1', '2025-11-03 00:00:00', '정지영', '남', '문정중', '중3', '010-2132-8061', '모', '재원'");
-    insert("students", "id, created_at, name, gender, school, grade, parent, parent_phone, state", "'2', '2025-11-03 00:00:00', '이형건', '남', '문정중', '중3', '모', '010-5126-7385', '재원'");
-    insert("students", "id, created_at, name, gender, school, grade, parent, state, memo", "'3', '2025-11-03 00:00:00', '조안', '남', '글꽃중', '중3', '모', '재원', '25/12/01~12 내신대비(22일 복귀)'");
-    insert("students", "id, created_at, name, gender, school, grade, parent, state", "'4', '2025-11-03 00:00:00', '엄태이', '남', '가양중', '중3', '모', '재원'");
-    insert("students", "id, created_at, name, gender, school, grade, parent, parent_phone, state", "'5', '2025-11-03 00:00:00', '허지성', '남', '삼천중', '중3', '모', '010-3674-4747', '재원'");
-    insert("students", "id, created_at, name, gender, school, grade, phone, parent, parent_phone, state, memo", "'6', '2025-12-22 00:00:00', '도하빈', '남', '보문중', '중3', '010-5641-6870', '부', '010-2403-8807(부)', '재원', '화목 영어학원 \n25/12/29~31 기말고사'");
-    insert("students", "id, created_at, name, gender, school, grade, parent, parent_phone, state", "'7', '2025-11-03 00:00:00', '김소연', '여', '둔산중', '중2', '모', '010-4440-9436', '재원'");
-    insert("students", "id, created_at, name, gender, school, grade, parent, parent_phone, state", "'8', '2025-11-03 00:00:00', '서혜원', '여', '전민중', '중2', '모', '010-7277-3532', '재원'");
-    insert("students", "id, created_at, name, gender, school, grade, parent, parent_phone, state", "'9', '2025-11-03 00:00:00', '신유림', '여', '삼천중', '중2', '모', '010-5004-1543', '재원'");
-    insert("students", "id, created_at, name, gender, school, grade, parent, parent_phone, state", "'10', '2025-11-03 00:00:00', '이서윤', '여', '문정중', '중2', '모', '010-9990-8965', '재원'");
-    insert("students", "id, created_at, name, gender, school, grade, parent, parent_phone, state", "'11', '2025-11-03 00:00:00', '이시연', '여', '문정중', '중2', '모', '010-7455-7997', '재원'");
-    insert("students", "id, created_at, name, gender, school, grade, parent, parent_phone, state", "'12', '2025-11-03 00:00:00', '임동현', '남', '삼천중', '중2', '모', '010-9364-9296', '재원'");
-    insert("students", "id, created_at, name, gender, school, grade, parent, parent_phone, state", "'13', '2025-11-03 00:00:00', '장윤진', '여', '삼천중', '중2', '모', '010-7997-8308', '재원'");
-    insert("students", "id, created_at, name, gender, school, grade, parent, parent_phone, state", "'14', '2025-11-03 00:00:00', '최인제', '남', '버드내중', '중2', '모', '010-6664-8116', '재원'");
-    insert("students", "id, created_at, name, gender, school, grade, parent, parent_phone, state", "'15', '2026-01-06 00:00:00', '김한결', '남', '탄방중', '중2', '모', '010-3471-3157', '재원'");
-    insert("students", "id, created_at, name, gender, school, grade, state", "'16', '2025-11-03 00:00:00', '조아라', '여', '문정중', '중2', '재원'");
-    insert("students", "id, created_at, name, gender, school, grade, state", "'17', '2025-11-03 00:00:00', '김은승', '여', '하기중', '중2', '재원'");
-    insert("students", "id, created_at, name, gender, school, grade, state", "'18', '2025-11-03 00:00:00', '박시우', '남', '대덕중', '중2', '재원'");
-    insert("students", "id, created_at, name, gender, school, grade, state", "'19', '2025-12-05 00:00:00', '김지아', '여', '갑천중', '중1', '재원'");
-    insert("students", "id, created_at, name, gender, school, grade, state, memo", "'20', '2025-12-05 00:00:00', '우주환', '남', '갑천중', '중1', '재원', '집중력 낮고 수업 중 말 많음. 핸드폰 몰래 사용하는 경우가 있음. 숙제 안해놓고 해왔다고 하는 경우 있음. 성취도는 중상. \n필기가 잘 안보이고 잘 안 하기도 함. 필기 점검 필수.\n주의를 단호하지만 과히지 않게 주는 게 좋음. \n부모님 모두 경찰직으로 엄격. 가정과의 연결이 필요할 경우, 전화보다는 채널이나 문자가 빠른듯…? 경찰 부모님이라는 특성상 ‘논리적, 간결하게’ 정리해서 연락하길 추천드림'");
-    insert("students", "id, created_at, name, gender, school, grade, state, memo", "'21', '2025-12-05 00:00:00', '정승호', '남', '삼천중', '중1', '재원', '조용. 자기 페이스 유지하는 스타일. 놀림 받아도 무던하게 넘김. 조용히 학습에 임하는 태도가 일관적. 과제 충실하게 해옴. 스스로 문제 해결했을 때 뿌듯. 계산실수 많음. 검산 습관 약한듯. 이해 여부가 잘 드러나지 않아 수업 중 확인 필수. 성취감 자주 느끼게 해주는 게 동기 유지에 중요한 타입.'");
-    insert("students", "id, created_at, name, gender, school, grade, state, memo", "'22', '2025-12-05 00:00:00', '조선우', '남', '관저중', '중1', '재원', '차분한 편. 자기주도학습 가능한 학생. 수업시간 딴짓 안하고 문제풀이 묵묵히 집중. 성취도 반에서 가장 뛰어남. 완벽주의적 성향이 있는 것 같음.\n어머니가 매우 꼼꼼히 학습 챙기심.\n중학 진학 후 내신 성적에 대한 불안이 높음(부모,학생 모두). 진학형 피드백을 적극적으로 주는 것이 매우 중요. 어머니께는 중등 내신 관리 시스템이 있다는 점을 구체적으로 안내해드리는 것이 신뢰 확보에 도움이 됨\n정서적 안정감 유지 필요. 긍정적 피드백 꾸준히 제공.'");
-    insert("students", "id, created_at, name, gender, grade, state", "'23', '2026-01-16 00:00:00', '김규현', '남', '중1', '재원'");
-    insert("students", "id, created_at, name, gender, grade, state", "'24', '2026-01-16 00:00:00', '서지현', '여', '중1', '재원'");
+    insert("students", "id, created_at, name, gender, school, grade, phone, parent, state", "'1', '2025-11-03 00:00:00', '정지영', 'man', '문정중', '중3', '010-2132-8061', '모', 'active'");
+    insert("students", "id, created_at, name, gender, school, grade, parent, parent_phone, state", "'2', '2025-11-03 00:00:00', '이형건', 'man', '문정중', '중3', '모', '010-5126-7385', 'active'");
+    insert("students", "id, created_at, name, gender, school, grade, parent, state, memo", "'3', '2025-11-03 00:00:00', '조안', 'man', '글꽃중', '중3', '모', 'active', '25/12/01~12 내신대비(22일 복귀)'");
+    insert("students", "id, created_at, name, gender, school, grade, parent, state", "'4', '2025-11-03 00:00:00', '엄태이', 'man', '가양중', '중3', '모', 'active'");
+    insert("students", "id, created_at, name, gender, school, grade, parent, parent_phone, state", "'5', '2025-11-03 00:00:00', '허지성', 'man', '삼천중', '중3', '모', '010-3674-4747', 'active'");
+    insert("students", "id, created_at, name, gender, school, grade, phone, parent, parent_phone, state, memo", "'6', '2025-12-22 00:00:00', '도하빈', 'man', '보문중', '중3', '010-5641-6870', '부', '010-2403-8807(부)', 'active', '화목 영어학원 \n25/12/29~31 기말고사'");
+    insert("students", "id, created_at, name, gender, school, grade, parent, parent_phone, state", "'7', '2025-11-03 00:00:00', '김소연', 'woman', '둔산중', '중2', '모', '010-4440-9436', 'active'");
+    insert("students", "id, created_at, name, gender, school, grade, parent, parent_phone, state", "'8', '2025-11-03 00:00:00', '서혜원', 'woman', '전민중', '중2', '모', '010-7277-3532', 'active'");
+    insert("students", "id, created_at, name, gender, school, grade, parent, parent_phone, state", "'9', '2025-11-03 00:00:00', '신유림', 'woman', '삼천중', '중2', '모', '010-5004-1543', 'active'");
+    insert("students", "id, created_at, name, gender, school, grade, parent, parent_phone, state", "'10', '2025-11-03 00:00:00', '이서윤', 'woman', '문정중', '중2', '모', '010-9990-8965', 'active'");
+    insert("students", "id, created_at, name, gender, school, grade, parent, parent_phone, state", "'11', '2025-11-03 00:00:00', '이시연', 'woman', '문정중', '중2', '모', '010-7455-7997', 'active'");
+    insert("students", "id, created_at, name, gender, school, grade, parent, parent_phone, state", "'12', '2025-11-03 00:00:00', '임동현', 'man', '삼천중', '중2', '모', '010-9364-9296', 'active'");
+    insert("students", "id, created_at, name, gender, school, grade, parent, parent_phone, state", "'13', '2025-11-03 00:00:00', '장윤진', 'woman', '삼천중', '중2', '모', '010-7997-8308', 'active'");
+    insert("students", "id, created_at, name, gender, school, grade, parent, parent_phone, state", "'14', '2025-11-03 00:00:00', '최인제', 'man', '버드내중', '중2', '모', '010-6664-8116', 'active'");
+    insert("students", "id, created_at, name, gender, school, grade, parent, parent_phone, state", "'15', '2026-01-06 00:00:00', '김한결', 'man', '탄방중', '중2', '모', '010-3471-3157', 'active'");
+    insert("students", "id, created_at, name, gender, school, grade, state", "'16', '2025-11-03 00:00:00', '조아라', 'woman', '문정중', '중2', 'active'");
+    insert("students", "id, created_at, name, gender, school, grade, state", "'17', '2025-11-03 00:00:00', '김은승', 'woman', '하기중', '중2', 'active'");
+    insert("students", "id, created_at, name, gender, school, grade, state", "'18', '2025-11-03 00:00:00', '박시우', 'man', '대덕중', '중2', 'active'");
+    insert("students", "id, created_at, name, gender, school, grade, state", "'19', '2025-12-05 00:00:00', '김지아', 'woman', '갑천중', '중1', 'active'");
+    insert("students", "id, created_at, name, gender, school, grade, state, memo", "'20', '2025-12-05 00:00:00', '우주환', 'man', '갑천중', '중1', 'active', '집중력 낮고 수업 중 말 많음. 핸드폰 몰래 사용하는 경우가 있음. 숙제 안해놓고 해왔다고 하는 경우 있음. 성취도는 중상. \n필기가 잘 안보이고 잘 안 하기도 함. 필기 점검 필수.\n주의를 단호하지만 과히지 않게 주는 게 좋음. \n부모님 모두 경찰직으로 엄격. 가정과의 연결이 필요할 경우, 전화보다는 채널이나 문자가 빠른듯…? 경찰 부모님이라는 특성상 ‘논리적, 간결하게’ 정리해서 연락하길 추천드림'");
+    insert("students", "id, created_at, name, gender, school, grade, state, memo", "'21', '2025-12-05 00:00:00', '정승호', 'man', '삼천중', '중1', 'active', '조용. 자기 페이스 유지하는 스타일. 놀림 받아도 무던하게 넘김. 조용히 학습에 임하는 태도가 일관적. 과제 충실하게 해옴. 스스로 문제 해결했을 때 뿌듯. 계산실수 많음. 검산 습관 약한듯. 이해 여부가 잘 드러나지 않아 수업 중 확인 필수. 성취감 자주 느끼게 해주는 게 동기 유지에 중요한 타입.'");
+    insert("students", "id, created_at, name, gender, school, grade, state, memo", "'22', '2025-12-05 00:00:00', '조선우', 'man', '관저중', '중1', 'active', '차분한 편. 자기주도학습 가능한 학생. 수업시간 딴짓 안하고 문제풀이 묵묵히 집중. 성취도 반에서 가장 뛰어남. 완벽주의적 성향이 있는 것 같음.\n어머니가 매우 꼼꼼히 학습 챙기심.\n중학 진학 후 내신 성적에 대한 불안이 높음(부모,학생 모두). 진학형 피드백을 적극적으로 주는 것이 매우 중요. 어머니께는 중등 내신 관리 시스템이 있다는 점을 구체적으로 안내해드리는 것이 신뢰 확보에 도움이 됨\n정서적 안정감 유지 필요. 긍정적 피드백 꾸준히 제공.'");
+    insert("students", "id, created_at, name, gender, grade, state", "'23', '2026-01-16 00:00:00', '김규현', 'man', '중1', 'active'");
+    insert("students", "id, created_at, name, gender, grade, state", "'24', '2026-01-16 00:00:00', '서지현', 'woman', '중1', 'active'");
     insert("group_students", "id, created_at, group_id, student_id", "'1', '2025-11-03 00:00:00', '1', '1'");
     insert("group_students", "id, created_at, group_id, student_id", "'2', '2025-11-03 00:00:00', '1', '2'");
     insert("group_students", "id, created_at, group_id, student_id", "'3', '2025-11-03 00:00:00', '1', '3'");
@@ -352,6 +352,11 @@
     insert("group_students", "id, created_at, group_id, student_id", "'22', '2025-12-05 00:00:00', '4', '22'");
     insert("group_students", "id, created_at, group_id, student_id", "'23', '2026-01-16 00:00:00', '4', '23'");
     insert("group_students", "id, created_at, group_id, student_id", "'24', '2026-01-16 00:00:00', '4', '24'");
+    insert("plans", "id, created_at, group_id, date, lesson, homework, exam, notice", "'1', '2025-11-22 00:00:00', '1', '2025-11-22', '11/22 계획표', '11/22 숙제', '11/22 시험', '11/22 공지사항'");
+    insert("plans", "id, created_at, group_id, date, memo, lesson, homework, notice", "'2', '2025-11-24 00:00:01', '1', '2025-11-24', '000 여행', '11/24 계획표', '11/24 숙제', '11/24 공지사항'");
+    insert("plans", "id, created_at, group_id, date, lesson, homework, exam", "'3', '2025-11-25 00:00:02', '1', '2025-11-25', '11/25 계획표', '11/25 숙제', '11/25 시험'");
+    insert("plans", "id, created_at, group_id, date, lesson, homework, exam, notice", "'4', '2025-11-27 00:00:03', '1', '2025-11-27', '11/27 계획표', '11/27 숙제', '11/27 시험', '11/27 공지사항'");
+    insert("plans", "id, created_at, group_id, date, lesson, homework, notice", "'5', '2025-11-28 00:00:04', '1', '2025-11-28', '11/28 계획표', '11/28 숙제', '11/28 공지사항'");
     
     console.log("🌱 seed done");
   }
@@ -505,9 +510,20 @@
     return groupDetails;
   }
 
+  /**
+   * 
+   * @param {number} groupId 
+   * @returns {
+   *   student_id, student_name,
+   *   student_gender, student_school,
+   *   student_grade, student_phone,
+   *   student_parent, student_parent_phone,
+   *   student_state, student_memo
+   * }
+   */
   function getStudentsByGroup(groupId) {
     const fields = formatFieldWithAlias(`
-      st.id, st.name, st.gender, st.school, st.grade,
+      st.id, st.name, st.gender, st.school, st.grade, st.created_at,
       st.phone, st.parent, st.parent_phone, st.state, st.memo`);
 
     const res = db.exec(`
@@ -546,7 +562,7 @@
   function getPlansByGroup(groupId) {
     const fields = formatFieldWithAlias(`
       p.id, p.group_id, p.date, p.memo,
-      p.lesson, p.homework, p.exam_id, p.notice`);
+      p.lesson, p.homework, p.exam, p.notice`);
 
     const res = db.exec(`
       SELECT ${fields}
@@ -555,6 +571,47 @@
       ORDER BY (date IS '') DESC, date DESC`,
       [groupId]
     );
+    return resultToObjects(res[0]);
+  }
+
+  function getCurAndPrevPlans(planId) {
+    const fields = formatFieldWithAlias(`
+      p.id, p.group_id, p.date, p.memo,
+      p.lesson, p.homework, p.exam, p.notice`);
+
+    const res = db.exec(`
+      SELECT ${fields}
+      FROM plans p2
+      JOIN plans p
+        ON p.group_id = p2.group_id
+      AND p.date <= p2.date
+      WHERE p2.id = ?
+      ORDER BY p.date DESC
+      LIMIT 2;
+    `, [planId]);
+
+    return resultToObjects(res[0]);
+  }
+
+  function getStudentRecords(planId) {
+    const fields = formatFieldWithAlias(`
+      st.id, re.id, re.lesson, re.homework, re.exam, re.notice, re.attendance,
+      re.homework_score, re.exam_score, re.memo`);
+
+    const res = db.exec(`
+      SELECT ${fields}
+      FROM plans p
+      JOIN group_students gs
+        ON gs.group_id = p.group_id
+      JOIN students st
+        ON st.id = gs.student_id
+      JOIN student_records re
+        ON re.plan_id = p.id
+        AND re.student_id = st.id
+      WHERE p.id = ?
+      ORDER BY st.name;
+    `, [planId]);
+
     return resultToObjects(res[0]);
   }
 
@@ -574,13 +631,23 @@
    * @param {string} exam 
    */
   function addPlan(groupId, value = {date: '', memo: '', lesson: '', homework: '', notice: ''}) {
-    db.run(
-      `INSERT INTO plans (group_id, date, memo, lesson, homework, notice)
-      VALUES (?, ?, ?, ?, ?, ?)`,
-      [
+    db.run(`
+      INSERT INTO plans (group_id, date, memo, lesson, homework, notice)
+      VALUES (?, ?, ?, ?, ?, ?)
+      `,[
         groupId, value.date, value.memo, value.lesson, value.homework, value.notice
       ]
     );
+  }
+
+  function addStudentRecord(planId, studentId) {
+    const res = db.exec(`
+      INSERT INTO student_records (plan_id, student_id)
+      VALUES (?, ?)
+      RETURNING *
+    `, [ planId, studentId ]);
+
+    return resultToObjects(res[0])[0];
   }
 
   // #endregion
@@ -607,7 +674,10 @@
     getStudentsByGroup,
     getUpdateLogsByGroup,
     getPlansByGroup,
+    getCurAndPrevPlans,
+    getStudentRecords,
     // ADD
     addPlan,
+    addStudentRecord,
   };
 })(window.App);

@@ -55,6 +55,7 @@
         break;
 
       case 'scores':
+        App.ui.score.renderScoreTab(area);
         break;
 
       case 'message':

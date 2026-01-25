@@ -62,48 +62,39 @@
       after_value: "TEXT NOT NULL",    // ex) "철수"
     },
 
-    attendance_records: {
-      date: "DATE NOT NULL", // YYYY-MM-DD
-      student_id: "INTEGER NOT NULL",
-      status: "TEXT NOT NULL", // 출석, 지각, 결석, 조퇴
-      memo: "TEXT DEFAULT ''",
-    },
-
     plans: {
       group_id: "INTEGER NOT NULL",
       date: "DATE NOT NULL", // YYYY-MM-DD
       memo: "TEXT DEFAULT ''",
       lesson: "TEXT DEFAULT ''",
       homework: "TEXT DEFAULT ''",
-      exam_id: "INTEGER DEFAULT 0",
+      exam: "TEXT DEFAULT ''",
       notice: "TEXT DEFAULT ''",
+      __unique: "UNIQUE(group_id, date)",
     },
 
-    plan_overrides: {
+    student_records: {
       plan_id: "INTEGER NOT NULL",
       student_id: "INTEGER NOT NULL",
-      lesson: "TEXT DEFAULT ''",
-      homework: "TEXT DEFAULT ''",
-      notice: "TEXT DEFAULT ''",
+      lesson: "TEXT DEFAULT ''", // override
+      homework: "TEXT DEFAULT ''", // override
+      exam: "TEXT DEFAULT ''", // override
+      notice: "TEXT DEFAULT ''", // override
+      attendance: "TEXT DEFAULT ''", // 출석, 지각, 결석, 조퇴
+      homework_score: "INTEGER DEFAULT 0", // 0~100 (%)
+      exam_score: "INTEGER DEFAULT 0", // 0~100 (점)
+      memo: "TEXT DEFAULT ''",
       __unique: "UNIQUE(plan_id, student_id)",
     },
 
-    exams: {
-      title: "TEXT NOT NULL", // 시험지 이름
-      unit: "TEXT DEFAULT ''", // 과목, 단원
-      difficulty: "TEXT DEFAULT ''",
-      question_number: "INTEGER DEFAULT 0", // 문제 개수
-      full_score: "INTEGER DEFAULT 100", // 만점 몇 점인지
-      memo: "TEXT DEFAULT ''",
-    },
-
-    exam_scores: {
-      exam_id: "INTEGER NOT NULL",
-      student_id: "INTEGER NOT NULL",
-      date: "DATE NOT NULL",
-      score: "INTEGER NOT NULL",
-      memo: "TEXT DEFAULT ''",
-    },
+    // exams: {
+    //   title: "TEXT NOT NULL", // 시험지 이름
+    //   difficulty: "TEXT DEFAULT ''",
+    //   question_number: "INTEGER DEFAULT 0", // 문제 개수
+    //   full_score: "INTEGER DEFAULT 100", // 만점 몇 점인지
+    //   memo: "TEXT DEFAULT ''",
+    //   __unique: "UNIQUE(title)",
+    // },
 
     consults: {
       date: "TEXT DEFAULT ''",

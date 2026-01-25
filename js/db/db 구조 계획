@@ -16,19 +16,16 @@ students: { name, school, grade, phone, parent, parent_phone, memo }
 group_students: { group_id, student_id }
 
 change_logs: { table_name, record_id, action, changed_field, before_value, after_value, changed_at }
-// table_name: 
 
-attendance_records: { date, student_id, status, memo }
+student_records: { date, student_id, attendance, homework_score, exam_score, memo }
 // status: 출석, 지각, 결석
 
-plans: { group_id, date, memo, lesson, homework, exam_id }
+plans: { group_id, date, memo, lesson, homework, exam }
 
 plan_overrides: { plan_id, student_id, lesson, homework }
 // UNIQUE(plan_id, student_id)
 
 exams: { title, unit, difficulty, question_number, full_score, memo }
-
-exam_scores: { exam_id, student_id, date, score, memo }
 
 math_units: { subject, chapter_no, chapter_title, section_no, section_title, memo }
 // UNIQUE(subject, chapter_no, section_no)

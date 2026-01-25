@@ -10,30 +10,20 @@
     });
   }
 
-  const displayFunction = {
-    date: App.utils.date.formatDateKorean,
-    schedules: App.utils.date.formatSchedules,
-  };
-  const editorType = {
-    row_id:     "number",
-    group_id:   "number",
-    plan_id:    "number",
-    student_id: "number",
-    day:        "number",
-    year:       "number",
-    exam_score: "number",
-    start_time: "time",
-    end_time:   "time",
-    changed_at: "date",
-    date:       "date",
-    memo:       "textarea",
-    lesson:     "textarea",
-    homework:   "textarea",
-    exam:       "textarea",
-    notice:     "textarea",
-    content:    "textarea",
-    schedules:  "table",
-  };
+  function formatDisplayValue(key, value, placeholder = '') {
+    const def = App.db.getColumnDef(key);
+
+    if (!value)
+      return placeholder || '';
+    if (def.source.column === 'date')
+      return App.utils.date.formatDateKorean(value);
+    if (def.source.column === 'schedules')
+      return App.utils.date.formatSchedules(value);
+    if (def.source.editor === 'select')
+      return def.source.options.find(opt => opt.value === value).label;
+    return value;
+  }
+
   const WIDTH_NUM = Object.freeze({
     short:  50,
     name:   70,
@@ -86,8 +76,18 @@
     plan_memo: WIDTH_NUM.long,
     plan_lesson: WIDTH_NUM.long,
     plan_homework: WIDTH_NUM.long,
-    plan_exam_id: WIDTH_NUM.medium,
+    plan_exam: WIDTH_NUM.medium,
     plan_notice: WIDTH_NUM.long,
+
+    prev_homework: WIDTH_NUM.medium,
+    record_lesson: WIDTH_NUM.medium,
+    record_homework: WIDTH_NUM.medium,
+    record_exam: WIDTH_NUM.medium,
+    record_notice: WIDTH_NUM.medium,
+    attendance: WIDTH_NUM.medium,
+    homework_score: WIDTH_NUM.medium,
+    exam_score: WIDTH_NUM.medium,
+    record_memo: WIDTH_NUM.medium,
   });
 
   /**
@@ -164,6 +164,7 @@
       html += "<div class='tbody'>";
       
       list.forEach(row => {
+        if(!row) return;
         html += `<div class="row">`;
 
         // 데이터 tdata
@@ -172,13 +173,7 @@
           if (!def) return;
 
           const actualValue = row[col];
-          let displayValue;
-          if (!actualValue)
-            displayValue = "";
-          else if (displayFunction[def.source.column])
-            displayValue = displayFunction[def.source.column](row[col]);
-          else
-            displayValue = actualValue;
+          let displayValue = formatDisplayValue(col, actualValue, row[def.source.placeholder]);
           
           html += `
             <div
@@ -187,6 +182,7 @@
               data-col="${def.source.column}"
               data-id="${row[def.source.idField]}"
               data-editable="${def.editable}"
+              data-key="${col}"
               tabindex="0"
               data-value="${actualValue ?? ""}"
               ${COLUMNS_WIDTH[col] ? `style="width: ${COLUMNS_WIDTH[col]}px; min-width: ${COLUMNS_WIDTH[col]}px"` : ''}>
@@ -244,11 +240,14 @@
    * @param {*} rawValue 보여지는(display) 값이 아닌 실제 DB에 저장된 값
    * @returns {HTMLElement} input or textarea
    */
-  function createEditor(col, rawValue) {
-    if (editorType[col] == "schedules") {
+  function createEditor(key, rawValue) {
+    const { editor, options } = App.db.getColumnDef(key).source;
+    console.log(editor, options, rawValue);
+
+    if (editor == "schedules") {
       return;
     }
-    if (editorType[col] == "textarea") {
+    if (editor == "textarea") {
       const ta = document.createElement("textarea");
       ta.value = rawValue ?? "";
       ta.rows = 1;
@@ -266,19 +265,34 @@
       });
       return ta;
     }
+
+    if (editor == "select") {
+      const select = document.createElement("select");
+
+      options.forEach(opt => {
+        const option = document.createElement("option");
+        option.value = opt.value;
+        option.textContent = opt.label;
+        if (option.value == rawValue) option.selected = true;
+        select.appendChild(option);
+      });
+
+      return select;
+    }
     
     // number / date / default(text)
     const input = document.createElement("input");
-    input.type = editorType[col] ?? "text";
+    input.type = editor ?? "text";
     input.value = rawValue ?? "";
-    if (editorType[col] == "date") {
-      input.addEventListener("focus", (e) => {
-        // 입력된 값이 없을 때, 오늘 날짜로 초기화
-        if (!e.target.value) {
-          e.target.value = App.utils.date.getTodayDate();
-        }
-      })
-    }
+
+    
+    input.addEventListener("focus", (e) => {
+      // 입력된 값이 없을 때, 오늘 날짜로 초기화
+      if (editor == "date" && !e.target.value) {
+        e.target.value = App.utils.date.getTodayDate();
+      }
+      e.target.select();
+    });
 
     return input;
   }
@@ -293,10 +307,11 @@
     const col = tdata.dataset.col;
     const id = tdata.dataset.id;
     const table = tdata.dataset.table;
+    const key = tdata.dataset.key;
 
     tdata.classList.add("editing");
 
-    const editor = createEditor(col, tdata.dataset.value);
+    const editor = createEditor(key, tdata.dataset.value);
 
     tdata.innerHTML = "";
     tdata.append(editor);
@@ -306,13 +321,13 @@
       if (e.target.tagName === "TEXTAREA") {
         if ((e.key === "Enter" && e.metaKey) || (e.key === "Enter" && e.ctrlKey)) {
           e.preventDefault();
-          finishEdit(tdata, displayValue, editor.value, table, col, id);
+          finishEdit(tdata, displayValue, editor.value, table, col, id, key);
           return;
         }
       } else {
         if (e.key === "Enter") {
           e.preventDefault();
-          finishEdit(tdata, displayValue, editor.value, table, col, id);
+          finishEdit(tdata, displayValue, editor.value, table, col, id, key);
           return;
         }
       }
@@ -325,7 +340,7 @@
     });
 
     editor.addEventListener("blur", () => {
-      finishEdit(tdata, displayValue, editor.value, table, col, id);
+      finishEdit(tdata, displayValue, editor.value, table, col, id, key);
     });
   }
 
@@ -340,8 +355,8 @@
    * @param {*} id 
    * @returns 
    */
-  function finishEdit(tdata, displayValue, newValue, table, col, id) {
-    console.log("finishEdit", displayValue, newValue, table, col, id);
+  function finishEdit(tdata, displayValue, newValue, table, col, id, key) {
+    console.log("finishEdit", displayValue, newValue, table, col, id, key);
     if(!tdata.classList.contains("editing")) return;
     tdata.classList.remove("editing");
 
@@ -349,11 +364,7 @@
     if (newValue !== tdata.dataset.value) {
       App.db.update(table, id, col, newValue);
       tdata.dataset.value = newValue;
-      if (displayFunction[col]) {
-        tdata.innerHTML = `<div class="td-text">${displayFunction[col](newValue)}</div>`;
-      } else {
-        tdata.innerHTML = `<div class="td-text">${newValue}</div>`;;
-      }
+      tdata.innerHTML = `<div class="td-text">${formatDisplayValue(key, newValue)}</div>`;;
       return;
     }
     // 값의 변화가 없는 경우
