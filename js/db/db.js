@@ -250,8 +250,12 @@
    * @returns 
    */
   function getRow(tablename, options) {
+    const tableAlias = App.utils.constants.TABLE_ALIAS[tablename];
+    const fieldStr = tableAlias + '.id,' + Object.keys(App.db.schema.DB_COLUMNS[tablename])
+    .filter(f => !f.startsWith("__")).map(f => `${tableAlias}.${f}`).join(",");
+    const fields = formatFieldWithAlias(fieldStr);
     const whereStr = Object.entries(options).map(([key, val]) => `${key} = "${val}"`).join(" AND ");
-    const row = db.exec(`SELECT * FROM ${tablename} WHERE ${whereStr}`);
+    const row = db.exec(`SELECT ${fields} FROM ${tablename} AS ${tableAlias} WHERE ${whereStr}`);
     return resultToObjects(row[0])[0];
   }
 
