@@ -22,8 +22,24 @@
       return (str.length > n) ? str.slice(0, n - 2) + '...' : str;
     }
 
+  function formatDisplayValue(key, value, defaultValue = '') {
+    const def = App.db.getColumnDef(key);
+
+    if (!value)
+      return defaultValue || '';
+    if (def.source.column === 'date')
+      return App.utils.date.formatDateKorean(value);
+    if (def.source.column === 'schedules')
+      return App.utils.date.formatSchedules(value);
+    if (def.source.editor === 'select')
+      return def.source.options.find(opt => opt.value === value).label;
+    return value;
+  }
+
+
   App.utils.text = {
     formatGradeFromYear,
     truncate,
+    formatDisplayValue,
   };
 })(window.App);

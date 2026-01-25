@@ -10,20 +10,6 @@
     });
   }
 
-  function formatDisplayValue(key, value, placeholder = '') {
-    const def = App.db.getColumnDef(key);
-
-    if (!value)
-      return placeholder || '';
-    if (def.source.column === 'date')
-      return App.utils.date.formatDateKorean(value);
-    if (def.source.column === 'schedules')
-      return App.utils.date.formatSchedules(value);
-    if (def.source.editor === 'select')
-      return def.source.options.find(opt => opt.value === value).label;
-    return value;
-  }
-
   const WIDTH_NUM = Object.freeze({
     short:  50,
     name:   70,
@@ -173,7 +159,7 @@
           if (!def) return;
 
           const actualValue = row[col];
-          let displayValue = formatDisplayValue(col, actualValue, row[def.source.placeholder]);
+          let displayValue = App.utils.text.formatDisplayValue(col, actualValue, row[def.source.placeholder]);
           
           html += `
             <div
@@ -364,7 +350,7 @@
     if (newValue !== tdata.dataset.value) {
       App.db.update(table, id, col, newValue);
       tdata.dataset.value = newValue;
-      tdata.innerHTML = `<div class="td-text">${formatDisplayValue(key, newValue)}</div>`;;
+      tdata.innerHTML = `<div class="td-text">${App.utils.text.formatDisplayValue(key, newValue)}</div>`;;
       return;
     }
     // 값의 변화가 없는 경우
