@@ -33,14 +33,14 @@
       if(!map[st.student_id]) {
         const record = App.db.addStudentRecord(curPlan.plan_id, st.student_id);
         map[st.student_id] = {
-          record_id: record.record_id,
-          record_lesson: record.record_lesson,
-          record_homework: record.record_homework,
-          record_notice: record.record_notice,
+          record_id: record.id,
+          record_lesson: record.lesson,
+          record_homework: record.homework,
+          record_notice: record.notice,
           attendance: record.attendance,
           homework_score: record.homework_score,
           exam_score: record.exam_score,
-          record_memo: record.record_memo,
+          record_memo: record.memo,
         }
       }
 
