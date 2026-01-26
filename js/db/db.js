@@ -419,6 +419,20 @@
     return resultToObjects(teachers[0]);
   }
 
+  function getAllSchedules() {
+    const res = db.exec(`
+      SELECT g.id, sc.day, sc.start_time, sc.end_time, g.name, gt.subject
+      FROM groups g
+      LEFT JOIN schedules sc ON g.id = sc.group_id
+      JOIN group_teachers gt
+        ON gt.group_id = g.id
+        AND gt.teacher_id = sc.teacher_id
+      WHERE sc.teacher_id = ?
+      ORDER BY g.id, sc.day;
+    `, [App.state.currentTeacherId]);
+    return resultToObjects(res[0]);
+  }
+
   function getGroup(group_id) {
     const fields = formatFieldWithAlias('g.id, g.name, g.memo');
 
@@ -741,6 +755,7 @@
     update,
     // GET
     getAllTeachers,
+    getAllSchedules,
     getGroup,
     getTeacher,
     getStudent,

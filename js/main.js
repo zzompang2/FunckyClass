@@ -19,6 +19,7 @@
     App.ui.sidebar.loadGroups();
     App.ui.sidebar.loadLocalbar();
     // createContextMenu();
+    App.ui.navigation.openMenu('timetable');
   }
 
   // 앱 실행 시 자동으로 init 함수 실행

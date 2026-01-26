@@ -5,25 +5,26 @@
    * @returns 
    */
   function openMenu(menu) {
-    if (!App.constants.MENU_CONFIG[menu]) return;
+    if (!App.utils.constants.MENU_CONFIG[menu]) return;
 
-    App.state.set('currentMenu', menu);
+    const area = document.getElementById("tabContent");
+    App.state.currentMenu = menu;
     
     switch (menu) {
       case 'timetable':
-        App.ui.renderer.showTimetable();
+        App.ui.timetable.renderMenu(area);
         break;
 
       case 'calendar':
-        App.ui.renderer.showCalendar();
+        App.ui.calendar.renderMenu(area);
         break;
 
       case 'diary':
-        App.ui.renderer.showDiary();
+        App.ui.diary.renderMenu(area);
         break;
 
       case 'db':
-        App.ui.renderer.showDB();
+        App.ui.db.renderMenu(area);
         break;
     }
   }

@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="css/table.css" />
   <link rel="stylesheet" href="css/tab.css" />
   <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/timetable.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
@@ -21,9 +22,9 @@
       </div>
       <div class="sidebar-container">
         <div class="sidebar-list">
-          <div class="sidebar-block" onclick="openMenu('timetable')">시간표</div>
-          <div class="sidebar-block" onclick="openMenu('calender')">달력/todo</div>
-          <div class="sidebar-block" onclick="openMenu('diary')">다이어리</div>
+          <div class="sidebar-block" onclick="App.ui.navigation.openMenu('timetable')">시간표</div>
+          <div class="sidebar-block" onclick="App.ui.navigation.openMenu('calender')">달력/todo</div>
+          <div class="sidebar-block" onclick="App.ui.navigation.openMenu('diary')">다이어리</div>
         </div>
       </div>
       <div class="sidebar-container">
@@ -97,6 +98,7 @@
   <script src="js/ui/scoreUI.js"></script>
   <script src="js/ui/messageUI.js"></script>
   <script src="js/ui/consultUI.js"></script>
+  <script src="js/ui/timetableUI.js"></script>
 
   <!-- 7. entry -->
   <script src="js/main.js"></script>

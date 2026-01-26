@@ -1,6 +1,4 @@
 (function (App) {
-  const tableToShow = ["date", "lesson", "homework", "exam", "notice", "memo"];
-
   function renderScoreTab(area) {
     // 계획 목록 (날짜 선택용)
     const plans = App.db.getPlansByGroup(App.state.currentGroupId);
