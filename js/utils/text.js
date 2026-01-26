@@ -27,11 +27,11 @@
 
     if (!value)
       return defaultValue || '';
-    if (def.source.column === 'date')
+    if (def.source?.column === 'date')
       return App.utils.date.formatDateKorean(value);
-    if (def.source.column === 'schedules')
+    if (def.source?.column === 'schedules')
       return App.utils.date.formatSchedules(value);
-    if (def.source.editor === 'select')
+    if (def.source?.editor === 'select')
       return def.source.options.find(opt => opt.value === value).label;
     return value;
   }

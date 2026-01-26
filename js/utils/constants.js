@@ -13,8 +13,8 @@
       info:     { label: "정보" },
       plans:    { label: "계획" },
       scores:   { label: "과제/성적" },
-      message:  { label: "문자" },
-      consult:  { label: "상담" },
+      messages: { label: "문자" },
+      consults: { label: "상담" },
     }),
 
     BACKUP_FILENAME: "funckyclass",
@@ -94,6 +94,11 @@
       're.exam_score': 'exam_score',
       're.feedback': 'record_feedback',
       're.memo': 'record_memo',
+      'co.id': 'consult_id',
+      'co.date': 'consult_date',
+      'co.student_id': 'consult_student_id',
+      'co.target': 'consult_target',
+      'co.content': 'consult_content',
     }),
 
     TEACHER_STATES: [
@@ -137,5 +142,11 @@
       { value: "leave", label: "조퇴" },
       { value: "", label: "미입력" },
     ],
+
+    CONSULT_TARGETS: [
+      { value: "", label: "미입력" },
+      { value: "parent", label: "학부모" },
+      { value: "student", label: "학생" },
+    ]
   };
 })(window.App);

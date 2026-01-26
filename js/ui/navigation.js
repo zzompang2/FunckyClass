@@ -58,11 +58,12 @@
         App.ui.score.renderScoreTab(area);
         break;
 
-      case 'message':
+      case 'messages':
         App.ui.message.renderTab(area);
         break;
 
-      case 'consult':
+      case 'consults':
+        App.ui.consult.renderTab(area);
         break;
     }
   }

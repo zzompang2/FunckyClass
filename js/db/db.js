@@ -647,6 +647,42 @@
     return resultToObjects(res[0]);
   }
 
+  function getConsultsByGroup(groupId) {
+    const fields = formatFieldWithAlias(`
+      co.id, co.date, co.student_id, st.name, co.target, co.content
+    `);
+
+    const res = db.exec(`
+      SELECT ${fields}
+      FROM consults co
+      JOIN group_students gs
+        ON gs.student_id = co.student_id
+      JOIN students st
+        ON st.id = co.student_id
+      WHERE gs.group_id = ?
+      ORDER BY (co.date IS '') DESC, co.date DESC`,
+      [groupId]
+    );
+    return resultToObjects(res[0]);
+  }
+
+  function getConsultsByStudent(studentId) {
+    const fields = formatFieldWithAlias(`
+      co.id, co.date, co.student_id, st.name, co.target, co.content
+    `);
+
+    const res = db.exec(`
+      SELECT ${fields}
+      FROM consults co
+      JOIN students st
+        ON st.id = co.student_id
+      WHERE co.student_id = ?
+      ORDER BY (co.date IS '') DESC, co.date DESC`,
+      [studentId]
+    );
+    return resultToObjects(res[0]);
+  }
+
   // #endregion
 
   // ============================================================
@@ -682,6 +718,13 @@
     return resultToObjects(res[0])[0];
   }
 
+  function addConsult(studentId) {
+    db.run(`
+      INSERT INTO consults (date, student_id, target)
+      VALUES (?, ?, ?)
+    `, [ App.utils.date.getTodayDate(), studentId, 'parent' ]);
+  }
+
   // #endregion
 
   App.db = {
@@ -711,8 +754,11 @@
     getPlansByGroup,
     getCurAndPrevPlans,
     getStudentRecords,
+    getConsultsByGroup,
+    getConsultsByStudent,
     // ADD
     addPlan,
     addStudentRecord,
+    addConsult,
   };
 })(window.App);

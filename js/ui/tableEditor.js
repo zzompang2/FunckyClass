@@ -67,6 +67,11 @@
     exam_score: WIDTH_NUM.short,
     record_feedback: WIDTH_NUM.medium,
     record_memo: WIDTH_NUM.medium,
+
+    consult_date: WIDTH_NUM.day,
+    consult_student_name: WIDTH_NUM.name,
+    consult_target: WIDTH_NUM.name,
+    consult_content: 400,
   });
 
   /**
@@ -152,14 +157,14 @@
           if (!def) return;
 
           const actualValue = row[col];
-          let displayValue = App.utils.text.formatDisplayValue(col, actualValue, row[def.source.placeholder]);
+          let displayValue = App.utils.text.formatDisplayValue(col, actualValue, row[def.source?.placeholder]);
           
           html += `
             <div
               class="tdata"
-              data-table="${def.source.table}"
-              data-col="${def.source.column}"
-              data-id="${row[def.source.idField]}"
+              data-table="${def.source?.table}"
+              data-col="${def.source?.column}"
+              data-id="${row[def.source?.idField]}"
               data-editable="${def.editable}"
               data-key="${col}"
               tabindex="0"

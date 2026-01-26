@@ -408,7 +408,48 @@
         editor: "textarea",
       },
       editable: true,
-    },    
+    },
+
+    // CONSULT
+    {
+      key: "consult_date",
+      label: "날짜",
+      source: {
+        table: "consults",
+        column: "date",
+        idField: "consult_id",
+        editor: "date",
+      },
+      editable: true,
+    },
+    {
+      key: "consult_student_name",
+      label: "학생",
+      editable: false,
+    },
+    {
+      key: "consult_target",
+      label: "대상",
+      source: {
+        table: "consults",
+        column: "target",
+        idField: "consult_id",
+        editor: "select",
+        options: App.utils.constants.CONSULT_TARGETS,
+      },
+      editable: true,
+    },
+    {
+      key: "consult_content",
+      label: "상담 내용",
+      source: {
+        table: "consults",
+        column: "content",
+        idField: "consult_id",
+        editor: "textarea",
+      },
+      editable: true,
+    },
   ];
 
   App.db.getColumnDef = function (key) {

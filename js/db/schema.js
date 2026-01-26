@@ -100,6 +100,7 @@
     consults: {
       date: "TEXT DEFAULT ''",
       student_id: "INTEGER DEFAULT 0",
+      target: "TEXT DEFAULT ''",
       content: "TEXT DEFAULT ''",
     },
 
